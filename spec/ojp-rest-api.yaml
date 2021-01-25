@@ -1,7 +1,8 @@
 openapi: 3.0.3
 info:
   title: OJP REST API
-  description: The Open Journey Planner (OJP) as a REST Service.
+  description: >-
+    The Open Journey Planner (OJP) as a REST service.
   contact:
     email: schlpbch@gmail.com
   license:
@@ -10,8 +11,6 @@ info:
   version: 0.0.1
 servers:
 - url: https://virtserver.swaggerhub.com/schlpbch/ojp-rest-api/0.0.1
-  description: SwaggerHub API Auto Mocking
-- url: https://virtserver.swaggerhub.com/schlpbch/ojp-api/0.0.1
   description: SwaggerHub API Auto Mocking
 tags:
 - name: Trips
@@ -22,12 +21,14 @@ paths:
       tags:
       - Trips
       summary: returns trips for a given trip request
-      description: returns trips for a given trip request based on OJP model.
+      description: >-
+        Returns trips for a given trip request based on the OJP specification.
       operationId: postTrips
       parameters:
       - name: Access-Token
         in: header
-        description: OAuth2 token used to authenticate the consumer API. Refer to
+        description: >-
+          OAuth2 token used to authenticate the consumer API. Refer to
           the implementation documentation for information on how to get a token.
         required: true
         style: simple
@@ -36,7 +37,8 @@ paths:
           type: string
       - name: Accept-Language
         in: header
-        description: Describes the set of natural languages that are preferred for
+        description: >-
+          Describes the set of natural languages that are preferred for
           localized text in the response  to the request (see RFC2616-sec14.4).  Supporting
           English (en) is a must.
         required: false
@@ -45,14 +47,14 @@ paths:
         schema:
           type: string
       requestBody:
-        description: Inventory item to add
+        description: request for a journey
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/OJPRequest'
       responses:
         "200":
-          description: search results matching criteria
+          description: journeys found matching criteria
           content:
             application/json:
               schema:
@@ -61,8 +63,10 @@ paths:
                   $ref: '#/components/schemas/OJPReply'
         "400":
           description: bad input parameter
-        "409":
-          description: an existing item already exists
+        "404":
+          description: no journeys found
+        "503":
+          description: service unavailable
 components:
   schemas:
     OJPRequest:
@@ -228,7 +232,7 @@ components:
       - transferMode
       type: object
       properties:
-        transerMode:
+        transferMode:
           type: string
           example: walk
         legStart:
@@ -316,10 +320,10 @@ components:
           type: string
         journeyRef:
           type: string
-          example: ojp:910S1:N:H:j20:179
+          example: "ojp:910S1:N:H:j20:179"
         lineRef:
           type: string
-          example: ojp:910S1:N
+          example: "ojp:910S1:N"
         directionRef:
           type: string
           example: H
@@ -330,14 +334,14 @@ components:
           example: S1
         operatorRef:
           type: string
-          example: ojp:11
-        atrributes:
+          example: "ojp:11"
+        attributes:
           type: array
           items:
             $ref: '#/components/schemas/Attribute'
         destinationStop:
           type: string
-          example: de:00000:-1
+          example: "de:00000:-1"
         destinationText:
           type: string
           example: Sursee
@@ -369,7 +373,7 @@ components:
       properties:
         text:
           type: string
-          example: Maskenpflicht für Reisend ab 12 Jahren
+          example: Maskenpflicht für Reisende ab 12 Jahren
         code:
           type: string
           example: A__OM
@@ -453,10 +457,10 @@ components:
           format: integer
     TopographicPlaceRef:
       type: string
-      example: 23036261:27
+      example: "23036261:27"
     PointOfInterestRef:
       type: string
       example: "8503000"
     AddressRef:
       type: string
-      example: Segntinistrasse 7, 3006 Bern
+      example: Segantinistrasse 7, 3006 Bern
