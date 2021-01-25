@@ -1,0 +1,462 @@
+openapi: 3.0.3
+info:
+  title: OJP REST API
+  description: The Open Journey Planner (OJP) as a REST Service.
+  contact:
+    email: schlpbch@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+servers:
+- url: https://virtserver.swaggerhub.com/schlpbch/ojp-rest-api/0.0.1
+  description: SwaggerHub API Auto Mocking
+- url: https://virtserver.swaggerhub.com/schlpbch/ojp-api/0.0.1
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Trips
+  description: resources to search for trips and locations
+paths:
+  /trips:
+    post:
+      tags:
+      - Trips
+      summary: returns trips for a given trip request
+      description: returns trips for a given trip request based on OJP model.
+      operationId: postTrips
+      parameters:
+      - name: Access-Token
+        in: header
+        description: OAuth2 token used to authenticate the consumer API. Refer to
+          the implementation documentation for information on how to get a token.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: Accept-Language
+        in: header
+        description: Describes the set of natural languages that are preferred for
+          localized text in the response  to the request (see RFC2616-sec14.4).  Supporting
+          English (en) is a must.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Inventory item to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OJPRequest'
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OJPReply'
+        "400":
+          description: bad input parameter
+        "409":
+          description: an existing item already exists
+components:
+  schemas:
+    OJPRequest:
+      required:
+      - destination
+      - origin
+      type: object
+      properties:
+        origin:
+          $ref: '#/components/schemas/PlaceContextStructure'
+        destination:
+          $ref: '#/components/schemas/PlaceContextStructure'
+        via:
+          type: array
+          items:
+            $ref: '#/components/schemas/ViaPoint'
+        notVia:
+          type: string
+          example: todo
+        noChangesAt:
+          type: string
+          example: todo
+    PlaceContextStructure:
+      type: object
+      properties:
+        place:
+          oneOf:
+          - $ref: '#/components/schemas/PlaceRefStructure'
+          - $ref: '#/components/schemas/TripPlace'
+        depArrTime:
+          type: string
+          format: date-time
+        timeAllowance:
+          type: string
+    PlaceRefStructure:
+      required:
+      - name
+      - ref
+      type: object
+      properties:
+        ref:
+          oneOf:
+          - $ref: '#/components/schemas/StopPointRef'
+          - $ref: '#/components/schemas/StopPlaceRef'
+          - $ref: '#/components/schemas/GeoPosition'
+          - $ref: '#/components/schemas/TopographicPlaceRef'
+          - $ref: '#/components/schemas/PointOfInterestRef'
+          - $ref: '#/components/schemas/AddressRef'
+        name:
+          type: string
+          example: Bern
+    ViaPoint:
+      required:
+      - name
+      - ref
+      type: object
+      properties:
+        ref:
+          oneOf:
+          - $ref: '#/components/schemas/StopPointRef'
+          - $ref: '#/components/schemas/StopPlaceRef'
+          - $ref: '#/components/schemas/GeoPosition'
+          - $ref: '#/components/schemas/TopographicPlaceRef'
+          - $ref: '#/components/schemas/PointOfInterestRef'
+          - $ref: '#/components/schemas/AddressRef'
+        name:
+          type: string
+          example: Bern
+    TripPlace:
+      type: string
+      example: todo
+    OJPReply:
+      required:
+      - tripDelivery
+      type: object
+      properties:
+        tripDelivery:
+          $ref: '#/components/schemas/TripDelivery'
+    TripDelivery:
+      required:
+      - tripResponseContext
+      - tripResult
+      type: object
+      properties:
+        tripResponseContext:
+          $ref: '#/components/schemas/TripResponseContext'
+        tripResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/TripResult'
+    TripResult:
+      required:
+      - timedLeg
+      type: object
+      properties:
+        trip:
+          oneOf:
+          - $ref: '#/components/schemas/Trip'
+          - $ref: '#/components/schemas/TripSummary'
+    Trip:
+      required:
+      - tripLegs
+      type: object
+      properties:
+        tripId:
+          type: string
+          format: uuid
+        duration:
+          type: string
+          example: to specify
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        transfers:
+          type: number
+          format: integer
+        tripLegs:
+          type: array
+          items:
+            $ref: '#/components/schemas/TripLeg'
+    TripSummary:
+      type: string
+      example: todo
+    TripLeg:
+      required:
+      - legs
+      type: object
+      properties:
+        legId:
+          type: string
+          format: uuid
+        legs:
+          type: array
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/TimedLeg'
+            - $ref: '#/components/schemas/TransferLeg'
+            - $ref: '#/components/schemas/ContinuousLeg'
+    TimedLeg:
+      required:
+      - legAlight
+      - legBoard
+      - service
+      type: object
+      properties:
+        legBoard:
+          $ref: '#/components/schemas/LegBoard'
+        legAlight:
+          $ref: '#/components/schemas/LegAlight'
+        service:
+          $ref: '#/components/schemas/Service'
+        extension:
+          $ref: '#/components/schemas/Extension'
+    TransferLeg:
+      required:
+      - legEnd
+      - legStart
+      - timeWindowEnd
+      - timeWindowStop
+      - transferMode
+      type: object
+      properties:
+        transerMode:
+          type: string
+          example: walk
+        legStart:
+          $ref: '#/components/schemas/PlaceRefStructure'
+        legEnd:
+          $ref: '#/components/schemas/PlaceRefStructure'
+        timeWindowStop:
+          type: string
+          format: date-time
+        timeWindowEnd:
+          type: string
+          format: date-time
+        extension:
+          $ref: '#/components/schemas/Extension'
+    ContinuousLeg:
+      type: string
+      example: todo
+    LegBoard:
+      required:
+      - order
+      - plannedQuay
+      - serviceDeparture
+      - stopPointName
+      - stopPointRef
+      type: object
+      properties:
+        stopPointRef:
+          $ref: '#/components/schemas/StopPointRef'
+        stopPointName:
+          type: string
+          example: Zug
+        plannedQuay:
+          type: string
+          example: "4"
+        serviceDeparture:
+          $ref: '#/components/schemas/ServiceDeparture'
+        order:
+          type: number
+          format: int
+          example: 1
+    ServiceDeparture:
+      required:
+      - estimatedTime
+      - timetabledTime
+      type: object
+      properties:
+        timetabledTime:
+          type: string
+          format: date-time
+        estimatedTime:
+          type: string
+          format: date-time
+    LegAlight:
+      required:
+      - order
+      - plannedQuay
+      - serviceArrival
+      - stopPointName
+      - stopPointRef
+      type: object
+      properties:
+        stopPointRef:
+          $ref: '#/components/schemas/StopPointRef'
+        stopPointName:
+          type: string
+          example: Luzern
+        plannedQuay:
+          type: string
+          example: "3"
+        serviceArrival:
+          $ref: '#/components/schemas/ServiceDeparture'
+        order:
+          type: number
+          format: int
+          example: 12
+    Service:
+      required:
+      - directionRef
+      - journeyRef
+      - lineRef
+      - operatingDayRef
+      type: object
+      properties:
+        operatingDayRef:
+          type: string
+        journeyRef:
+          type: string
+          example: ojp:910S1:N:H:j20:179
+        lineRef:
+          type: string
+          example: ojp:910S1:N
+        directionRef:
+          type: string
+          example: H
+        mode:
+          $ref: '#/components/schemas/Mode'
+        publishedServiceName:
+          type: string
+          example: S1
+        operatorRef:
+          type: string
+          example: ojp:11
+        atrributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attribute'
+        destinationStop:
+          type: string
+          example: de:00000:-1
+        destinationText:
+          type: string
+          example: Sursee
+    Mode:
+      required:
+      - directionRef
+      - lineRef
+      - ptMode
+      - railSubMode
+      type: object
+      properties:
+        ptMode:
+          type: string
+          example: rail
+        railSubMode:
+          type: string
+          example: local
+        name:
+          type: string
+          example: Zug
+        shortName:
+          type: string
+          example: S
+    Attribute:
+      required:
+      - code
+      - text
+      type: object
+      properties:
+        text:
+          type: string
+          example: Maskenpflicht für Reisend ab 12 Jahren
+        code:
+          type: string
+          example: A__OM
+    Extension:
+      type: object
+      properties:
+        transportTypeName:
+          type: string
+          example: S-Bahn
+        publishedJourneyNumber:
+          type: string
+          example: "21137"
+    TripResponseContext:
+      type: array
+      items:
+        $ref: '#/components/schemas/Place'
+    Place:
+      required:
+      - geoPosition
+      - name
+      - stopPlace
+      type: object
+      properties:
+        stopPlace:
+          $ref: '#/components/schemas/StopPlace'
+        name:
+          type: string
+          example: Zürich HB
+        geoPosition:
+          $ref: '#/components/schemas/GeoPosition'
+    StopPlace:
+      required:
+      - privateCode
+      - stopPlaceName
+      - stopPlaceRef
+      type: object
+      properties:
+        stopPlaceRef:
+          $ref: '#/components/schemas/StopPlaceRef'
+        stopPlaceName:
+          type: string
+          example: Zürich HB
+        privateCode:
+          $ref: '#/components/schemas/PrivateCode'
+        topographicPlaceRef:
+          $ref: '#/components/schemas/TopographicPlaceRef'
+    PrivateCode:
+      required:
+      - system
+      - value
+      type: object
+      properties:
+        system:
+          type: string
+          example: EFA
+        value:
+          type: string
+          example: 106218:0
+    StopPointRef:
+      type: string
+      example: "8503000"
+    StopPlaceRef:
+      type: string
+      example: "8503000"
+    GeoPosition:
+      required:
+      - latitude
+      - longitude
+      type: object
+      properties:
+        longitude:
+          type: number
+          format: float
+          example: 8.54021
+        latitude:
+          type: number
+          format: float
+          example: 47.37818
+        precision:
+          type: number
+          format: integer
+    TopographicPlaceRef:
+      type: string
+      example: 23036261:27
+    PointOfInterestRef:
+      type: string
+      example: "8503000"
+    AddressRef:
+      type: string
+      example: Segntinistrasse 7, 3006 Bern
