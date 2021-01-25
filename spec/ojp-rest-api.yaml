@@ -1,16 +1,15 @@
 openapi: 3.0.3
 info:
   title: OJP REST API
-  description: >-
-    The Open Journey Planner (OJP) as a REST service.
+  description: The Open Journey Planner (OJP) as a REST service.
   contact:
     email: schlpbch@gmail.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.0.1
+  version: 0.0.2
 servers:
-- url: https://virtserver.swaggerhub.com/schlpbch/ojp-rest-api/0.0.1
+- url: https://virtserver.swaggerhub.com/schlpbch/ojp-rest-api/0.0.2
   description: SwaggerHub API Auto Mocking
 tags:
 - name: Trips
@@ -21,14 +20,12 @@ paths:
       tags:
       - Trips
       summary: returns trips for a given trip request
-      description: >-
-        Returns trips for a given trip request based on the OJP specification.
+      description: Returns trips for a given trip request based on the OJP specification.
       operationId: postTrips
       parameters:
       - name: Access-Token
         in: header
-        description: >-
-          OAuth2 token used to authenticate the consumer API. Refer to
+        description: OAuth2 token used to authenticate the consumer API. Refer to
           the implementation documentation for information on how to get a token.
         required: true
         style: simple
@@ -37,8 +34,7 @@ paths:
           type: string
       - name: Accept-Language
         in: header
-        description: >-
-          Describes the set of natural languages that are preferred for
+        description: Describes the set of natural languages that are preferred for
           localized text in the response  to the request (see RFC2616-sec14.4).  Supporting
           English (en) is a must.
         required: false
@@ -320,10 +316,10 @@ components:
           type: string
         journeyRef:
           type: string
-          example: "ojp:910S1:N:H:j20:179"
+          example: ojp:910S1:N:H:j20:179
         lineRef:
           type: string
-          example: "ojp:910S1:N"
+          example: ojp:910S1:N
         directionRef:
           type: string
           example: H
@@ -334,14 +330,14 @@ components:
           example: S1
         operatorRef:
           type: string
-          example: "ojp:11"
+          example: ojp:11
         attributes:
           type: array
           items:
             $ref: '#/components/schemas/Attribute'
         destinationStop:
           type: string
-          example: "de:00000:-1"
+          example: de:00000:-1
         destinationText:
           type: string
           example: Sursee
@@ -431,7 +427,7 @@ components:
           example: EFA
         value:
           type: string
-          example: 106218:0
+          example: "6373080"
     StopPointRef:
       type: string
       example: "8503000"
@@ -457,7 +453,7 @@ components:
           format: integer
     TopographicPlaceRef:
       type: string
-      example: "23036261:27"
+      example: 23036261:27
     PointOfInterestRef:
       type: string
       example: "8503000"
