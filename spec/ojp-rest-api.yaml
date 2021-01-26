@@ -382,9 +382,7 @@ components:
       type: object
       properties:
         transferMode:
-          description: Mode that is used for this interchange between public services.
-          type: string
-          example: walk
+          $ref: "#/components/schemas/ContinuousMode"
         legStart:
           description: Stop/Station where boarding is done
           $ref: "#/components/schemas/PlaceRef"
@@ -782,7 +780,7 @@ components:
       description: Reference to a line 
       type: string
       example: toDo
-      
+
     DirectionRef:
       description: Reference to a line 
       type: string
