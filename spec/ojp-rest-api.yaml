@@ -3,7 +3,9 @@ info:
   title: OJP REST API
   description: The Open Journey Planner (OJP) as a REST service.
   contact:
-    email: schlpbch@gmail.com
+    name: Andreas Schlapbach
+    email: andreas.schlapbach@sbb.ch
+    url: https://github.com/schlpbch/ojp-rest-api
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -648,7 +650,7 @@ components:
           example: A__OM
 
     Extension:
-      description: TODO
+      description: toDo
       type: object
       properties:
         transportTypeName:
