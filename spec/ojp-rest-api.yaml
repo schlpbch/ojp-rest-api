@@ -47,7 +47,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OJPRequest'
+              $ref: "#/components/schemas/OJPRequest"
       responses:
         "200":
           description: journeys found matching criteria
@@ -56,7 +56,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/OJPReply'
+                  $ref: "#/components/schemas/OJPReply"
         "400":
           description: bad input parameter
         "404":
@@ -72,32 +72,55 @@ components:
       type: object
       properties:
         origin:
-          $ref: '#/components/schemas/PlaceContextStructure'
+          description: >-
+            Specifies the origin situation from where the user wants to start.
+          $ref: "#/components/schemas/PlaceContext"
         destination:
-          $ref: '#/components/schemas/PlaceContextStructure'
+          description: >-
+            Specifies the destination situation where the user is heading to.
+          $ref: "#/components/schemas/PlaceContext"
         via:
+          description: >-
+            Ordered series of points where the journey must pass through. If more
+            than one via point is given all of them must be obeyed - in the correct
+            order. The server is allowed to replace a via stop by equivalent stops.
           type: array
           items:
-            $ref: '#/components/schemas/ViaPoint'
+            $ref: "#/components/schemas/ViaPoint"
         notVia:
+          description: >-
+            Not-via restrictions for a TRIP, i.e. SCHEDULED STOP POINTs or STOP PLACEs
+            that the TRIP is not allowed to pass through. If more than one not via point 
+            is given all of them must be obeyed.
           type: string
-          example: todo
+          example: toDo
         noChangesAt:
+          description: >-
+            No-change-at restrictions for a TRIP, i.e. SCHEDULED STOP POINTs or STOP PLACEs 
+            at which no TRANSFER is allowed within a TRIP
           type: string
-          example: todo
-    PlaceContextStructure:
+          example: toDo
+        params: 
+          description: >-
+            Options to control the search behaviour and response contents.
+          type: string
+          example: toDo preferably as REST parameters
+
+    PlaceContext: 
       type: object
       properties:
         place:
           oneOf:
-          - $ref: '#/components/schemas/PlaceRefStructure'
-          - $ref: '#/components/schemas/TripPlace'
+          - $ref: "#/components/schemas/PlaceRef"
+          - $ref: "#/components/schemas/TripPlace"
         depArrTime:
           type: string
           format: date-time
         timeAllowance:
           type: string
-    PlaceRefStructure:
+
+    PlaceRef:
+      description: Static place
       required:
       - name
       - ref
@@ -105,16 +128,19 @@ components:
       properties:
         ref:
           oneOf:
-          - $ref: '#/components/schemas/StopPointRef'
-          - $ref: '#/components/schemas/StopPlaceRef'
-          - $ref: '#/components/schemas/GeoPosition'
-          - $ref: '#/components/schemas/TopographicPlaceRef'
-          - $ref: '#/components/schemas/PointOfInterestRef'
-          - $ref: '#/components/schemas/AddressRef'
+          - $ref: "#/components/schemas/StopPointRef"
+          - $ref: "#/components/schemas/StopPlaceRef"
+          - $ref: "#/components/schemas/GeoPosition"
+          - $ref: "#/components/schemas/TopographicPlaceRef"
+          - $ref: "#/components/schemas/PointOfInterestRef"
+          - $ref: "#/components/schemas/AddressRef"
         name:
           type: string
           example: Bern
+
     ViaPoint:
+      description: >-
+        Reference to specify the via place. Todo - Why not use PlaceRef?
       required:
       - name
       - ref
@@ -122,89 +148,171 @@ components:
       properties:
         ref:
           oneOf:
-          - $ref: '#/components/schemas/StopPointRef'
-          - $ref: '#/components/schemas/StopPlaceRef'
-          - $ref: '#/components/schemas/GeoPosition'
-          - $ref: '#/components/schemas/TopographicPlaceRef'
-          - $ref: '#/components/schemas/PointOfInterestRef'
-          - $ref: '#/components/schemas/AddressRef'
+          - $ref: "#/components/schemas/StopPointRef"
+          - $ref: "#/components/schemas/StopPlaceRef"
+          - $ref: "#/components/schemas/GeoPosition"
+          - $ref: "#/components/schemas/TopographicPlaceRef"
+          - $ref: "#/components/schemas/PointOfInterestRef"
+          - $ref: "#/components/schemas/AddressRef"
         name:
           type: string
           example: Bern
+
     TripPlace:
-      type: string
-      example: todo
+      description: >-
+        A trip place represents the current logical position of a  journey service. It can be 
+        used similarly to a place e.g. for starting a new trip requests from within this service. 
+        A trip place does not(!) describe the relative position of a traveller within a vehicle, 
+        e.g. the seat.      
+      type: object
+      required:
+        - operatingDayRef
+        - journeyRef
+      properties:
+        operatingDayRef:
+          $ref: "#/components/schemas/OperationDayRef"
+        journeyRef:
+          $ref: "#/components/schemas/JourneyRef"
+
     OJPReply:
       required:
       - tripDelivery
       type: object
       properties:
         tripDelivery:
-          $ref: '#/components/schemas/TripDelivery'
+          $ref: "#/components/schemas/TripDelivery"
+
     TripDelivery:
+      description: ToDo OJPDelivery
       required:
       - tripResponseContext
       - tripResult
       type: object
       properties:
         tripResponseContext:
-          $ref: '#/components/schemas/TripResponseContext'
+          $ref: "#/components/schemas/TripResponseContext"
         tripResults:
           type: array
           items:
-            $ref: '#/components/schemas/TripResult'
+            $ref: "#/components/schemas/TripResult"
+
     TripResult:
+      description: The trip results found by the server
       required:
       - timedLeg
       type: object
       properties:
         trip:
           oneOf:
-          - $ref: '#/components/schemas/Trip'
-          - $ref: '#/components/schemas/TripSummary'
+          - $ref: "#/components/schemas/Trip"
+          - $ref: "#/components/schemas/TripSummary"
+
     Trip:
+      description: A complete trip from origin to destination
       required:
+      - tripId
       - tripLegs
       type: object
       properties:
         tripId:
+          description: >-
+            Id of this trip for referencing purposes. Unique within trip response.
           type: string
           format: uuid
         duration:
+          description: Overall duration of the trip
           type: string
           example: to specify
         startTime:
+          description: Departure time at origin.
           type: string
           format: date-time
         endTime:
+          description: Arrival time at destination
           type: string
           format: date-time
         transfers:
+          description: Number of interchanges
           type: number
           format: integer
+          minimum: 0
+        distance:
+          description: Trip distance
+          type: number
+          format: integer
+          minimum: 0
         tripLegs:
+          description: Legs ot the trip
           type: array
           items:
-            $ref: '#/components/schemas/TripLeg'
+            $ref: "#/components/schemas/TripLeg"
+
     TripSummary:
-      type: string
-      example: todo
+      description: >-
+        Summary on trip. Only if requestor set TripSummaryOnly in request.
+      required:
+        - tripId
+      type: object
+      properties:
+        tripId:
+          description: >-
+            Id of this trip for referencing purposes. Unique within trip response.
+          type: string
+          format: uuid
+        origin:
+          description: Describes the origin situation of this trip.
+          $ref: "#/components/schemas/PlaceRef"
+        destination:
+          description: Describes the arrival situation of this trip.
+          $ref: "#/components/schemas/PlaceRef"
+        duration:
+          description: Overall duration of the trip
+          type: string
+          example: to specify
+        startTime:
+          description: Departure time at origin.
+          type: string
+          format: date-time
+        endTime:
+          description: Arrival time at destination
+          type: string
+          format: date-time
+        pTTripLegs:
+          description: Number of public transport trip legs
+          type: number
+          format: integer
+          minimum: 0
+        distance:
+          description: Trip distance
+          type: number
+          format: integer
+          minimum: 0
+        tripLegs:
+          description: Legs ot the trip
+          type: array
+          items:
+            $ref: "#/components/schemas/TripLeg"
+
     TripLeg:
+      description: trip leg
       required:
       - legs
       type: object
       properties:
         legId:
+          description: Id of this trip leg. Unique within trip result. 
           type: string
           format: uuid
         legs:
           type: array
           items:
             oneOf:
-            - $ref: '#/components/schemas/TimedLeg'
-            - $ref: '#/components/schemas/TransferLeg'
-            - $ref: '#/components/schemas/ContinuousLeg'
+            - $ref: "#/components/schemas/TimedLeg"
+            - $ref: "#/components/schemas/TransferLeg"
+            - $ref: "#/components/schemas/ContinuousLeg"
+
     TimedLeg:
+      description: ToDo
       required:
       - legAlight
       - legBoard
@@ -212,41 +320,120 @@ components:
       type: object
       properties:
         legBoard:
-          $ref: '#/components/schemas/LegBoard'
+          $ref: "#/components/schemas/LegBoard"
         legAlight:
-          $ref: '#/components/schemas/LegAlight'
+          $ref: "#/components/schemas/LegAlight"
         service:
-          $ref: '#/components/schemas/Service'
+          $ref: "#/components/schemas/Service"
         extension:
-          $ref: '#/components/schemas/Extension'
+          $ref: "#/components/schemas/Extension"
+
     TransferLeg:
+      description: >-
+        [A specialized type of NAVIGATION PATH in TMv6] description of a LEG which links
+        other LEGs of a TRIP where a TRANSFER between different LOCATIONs is required.
       required:
-      - legEnd
       - legStart
-      - timeWindowEnd
-      - timeWindowStop
+      - legEnd
+      - timeWindow
       - transferMode
       type: object
       properties:
         transferMode:
+          $ref: "#/components/schemas/TransferMode"
+        legStart:
+          description: Stop/Station where boarding is done
+          $ref: "#/components/schemas/PlaceRef"
+        legEnd:
+          description: Stop/Station to alight
+          $ref: "#/components/schemas/PlaceRef"
+        timeWindow:
+          $ref: "#/components/schemas/TimeWindow"
+        extension:
+          $ref: "#/components/schemas/Extension"
+
+    TransferMode:
+      description: Modes dedicated to perform transfers.
+      type: string
+      enum:
+        - WALK
+        - PARK_AND_RIDE
+        - BIKE_AND_RIDE
+        - CAR_HIRE
+        - BIKE_HIRE
+        - PROTECTED_CONNECTION
+        - GUARANTEED_CONNECTION
+        - REMAIN_IN_VEHICLE
+        - CHANGE_WITHIN_VEHICLE
+        - CHECK_IN
+        - CHECK_OUT
+      default: WALK
+
+    ContinuousLeg:
+      description: >-
+        [Relates to a specific type of RIDE in TM and NeTEx] leg of a journey that is not
+        bound to a timetable.
+      required:
+      - legStart
+      - legEnd
+      - service
+      - timeWindow
+      - transferMode
+      type: object
+      properties:
+        transferMode:
+          description: Mode that is used for this interchange between public services.
           type: string
           example: walk
         legStart:
-          $ref: '#/components/schemas/PlaceRefStructure'
+          description: Stop/Station where boarding is done
+          $ref: "#/components/schemas/PlaceRef"
         legEnd:
-          $ref: '#/components/schemas/PlaceRefStructure'
-        timeWindowStop:
+          description: Stop/Station to alight
+          $ref: "#/components/schemas/PlaceRef"
+        service:
+          description: >-
+            Service of this leg. May be "walk" in most cases, but also cycling or taxi etc.
           type: string
-          format: date-time
-        timeWindowEnd:
-          type: string
-          format: date-time
+          example: toDi
+        timeWindow:
+          $ref: "#/components/schemas/TimeWindow"
+        duration:
+          description: >-
+            Duration of this leg according to user preferences like walk speed.
+          type: number
+          format: integer
         extension:
-          $ref: '#/components/schemas/Extension'
-    ContinuousLeg:
+          $ref: "#/components/schemas/Extension"
+
+    ContinuousMode:
+      description: Types of modes that run at any time without a timetable.
       type: string
-      example: todo
+      enum:
+        - WALK
+        - DEMAND_RESPONSIVE
+        - REPLACEMENT_SERVICE
+      default: WALK
+    TimeWindow:
+      description: >-
+        The window of opportunity that the traveller has to perform this leg of 
+        the journey.
+      type: object
+      required:
+        - start
+        - end
+      properties:
+        stop:
+          description: Time at which window begins.
+          type: string
+          format: date-time
+        end:
+          description: Time at which window ends.
+          type: string
+          format: date-time
+
     LegBoard:
+      description: Stop/Station where boarding is done 
       required:
       - order
       - plannedQuay
@@ -256,20 +443,27 @@ components:
       type: object
       properties:
         stopPointRef:
-          $ref: '#/components/schemas/StopPointRef'
+          $ref: "#/components/schemas/StopPointRef"
         stopPointName:
           type: string
           example: Zug
         plannedQuay:
+          description: >-
+            Name of the bay where to board/alight from the vehicle. According to 
+            planned timetable.
           type: string
           example: "4"
         serviceDeparture:
-          $ref: '#/components/schemas/ServiceDeparture'
+          $ref: "#/components/schemas/ServiceDeparture"
         order:
           type: number
           format: int
           example: 1
+
     ServiceDeparture:
+      description: >-
+        Describes the departure situation at this leg board stop point (group of attributes
+        of TIMETABLED PASSING TIME, ESTIMATED PASSING TIME, OBSERVED PASSING TIME).
       required:
       - estimatedTime
       - timetabledTime
@@ -281,67 +475,106 @@ components:
         estimatedTime:
           type: string
           format: date-time
+        observedTime:
+          type: string
+          format: date-time
+
     LegAlight:
+      description: Stop/Station to alight
       required:
-      - order
-      - plannedQuay
-      - serviceArrival
-      - stopPointName
-      - stopPointRef
+        - order
+        - plannedQuay
+        - serviceArrival
+        - stopPointName
+        - stopPointRef
       type: object
       properties:
         stopPointRef:
-          $ref: '#/components/schemas/StopPointRef'
+          $ref: "#/components/schemas/StopPointRef"
         stopPointName:
           type: string
           example: Luzern
         plannedQuay:
+          description: >-
+            Name of the bay where to board/alight from the vehicle. According to 
+            planned timetable.
           type: string
           example: "3"
         serviceArrival:
-          $ref: '#/components/schemas/ServiceDeparture'
+          $ref: "#/components/schemas/ServiceDeparture"
         order:
           type: number
           format: int
           example: 12
+
     Service:
+      description: >-
+        Service that is used for this trip leg
       required:
-      - directionRef
-      - journeyRef
-      - lineRef
-      - operatingDayRef
+        - operatingDayRef
+        - directionRef
+        - lineRef
+        - mode
+        - publishedServiceName
       type: object
       properties:
         operatingDayRef:
-          type: string
+          $ref: "#/components/schemas/OperationDayRef"
         journeyRef:
-          type: string
-          example: ojp:910S1:N:H:j20:179
+          $ref: "#/components/schemas/JourneyRef"
+
+        ## ServiceGroup
+
+        ### LineDirectionGroup
         lineRef:
-          type: string
-          example: ojp:910S1:N
-        directionRef:
-          type: string
-          example: H
+          $ref: "#/components/schemas/LineRef"
+        directionRef: #optional
+          $ref: "#/components/schemas/DirectionRef"
+               
         mode:
-          $ref: '#/components/schemas/Mode'
+          $ref: "#/components/schemas/Mode"
+        productCategory: #optional
+          $ref: "#/components/schemas/ProductCategory"
         publishedServiceName:
+          description: >-
+            Line name or service description as known to the public, f.e. "512", "S8"
+            or "Circle Line" or "ICE 488".
           type: string
           example: S1
-        operatorRef:
+        trainNumber: #optional
+          description: >-
+            Contains the TrainNumber description from NeTEx. If several TrainNumber types 
+            exist, use the commercial number.
+          type: string
+          example: 1
+        operatorRef: #optional
+          description: Reference to transport operator
           type: string
           example: ojp:11
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Attribute'
+
+        ## OriginDestinationGroup
+        originStop:
+          type: string
+          example: de:00000:-1
+        originText:
+          type: string
+          example: Sursee
+
+        ##  ServiceDestinationGroup
         destinationStop:
           type: string
           example: de:00000:-1
         destinationText:
           type: string
           example: Sursee
+
+        attributes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Attribute"
+    
     Mode:
+      description: A method of transportation such as bus, rail, etc.
       required:
       - directionRef
       - lineRef
@@ -350,18 +583,60 @@ components:
       type: object
       properties:
         ptMode:
+          description: Categorization of mode
           type: string
           example: rail
         railSubMode:
-          type: string
-          example: local
+          $ref: "#/components/schemas/RailSubMode"
         name:
+          description: Name of the mode
           type: string
           example: Zug
         shortName:
+          description: Short name or acronym of the mode
           type: string
           example: S
+        description:
+          description: Additional text that further describes the mode
+          type: string
+
+    RailSubMode:
+      description: PT transport sub mode. ToDo
+      type: string
+      enum:
+       - AIR_SUB_MODE
+       - BUS_SUB_MODE
+       - COACH_SUB_MODE
+       - METRO_SUB_MODE
+       - RAIL_SUB_MODE
+       - TRAM_SUB_MODE
+       - WATER_SUB_MODE
+      default: RAIL_SUB_MODE
+
+    ProductCategory:
+      description: >-
+        Product category based on NeTEx/SIRI. A product category is a classification for VEHICLE JOURNEYs
+        to express some common properties of journeys for marketing and fare products.
+      required:
+        - name
+        - shortName
+        - productCategoryRef
+      properties:
+        name:
+          description: >-
+            Full name of this product category, e.g. "Autoreisezug" in Switzerland or "Train Grand Vitessee".
+          type: string
+          example: Autoreisezug
+        shortName:
+          description: >-
+            Short name or acronym of the product category, likely to be published, e.g. "ARZ", "TGV"
+          type: string
+          example: ARZ
+        productCategoryRef:
+          $ref: "#/components/schemas/ProductCategoryRef"
+
     Attribute:
+      description: Note or service attribute.
       required:
       - code
       - text
@@ -373,7 +648,9 @@ components:
         code:
           type: string
           example: A__OM
+
     Extension:
+      description: TODO
       type: object
       properties:
         transportTypeName:
@@ -382,11 +659,15 @@ components:
         publishedJourneyNumber:
           type: string
           example: "21137"
+
     TripResponseContext:
+      description: Context to hold trip response objects that occur frequently.
       type: array
       items:
-        $ref: '#/components/schemas/Place'
+        $ref: "#/components/schemas/Place"
+
     Place:
+      description: Model of a place
       required:
       - geoPosition
       - name
@@ -394,13 +675,15 @@ components:
       type: object
       properties:
         stopPlace:
-          $ref: '#/components/schemas/StopPlace'
+          $ref: "#/components/schemas/StopPlace"
         name:
           type: string
           example: Zürich HB
         geoPosition:
-          $ref: '#/components/schemas/GeoPosition'
+          $ref: "#/components/schemas/GeoPosition"
+
     StopPlace:
+      description: Model of a stop place
       required:
       - privateCode
       - stopPlaceName
@@ -408,15 +691,17 @@ components:
       type: object
       properties:
         stopPlaceRef:
-          $ref: '#/components/schemas/StopPlaceRef'
+          $ref: "#/components/schemas/StopPlaceRef"
         stopPlaceName:
           type: string
           example: Zürich HB
         privateCode:
-          $ref: '#/components/schemas/PrivateCode'
+          $ref: "#/components/schemas/PrivateCode"
         topographicPlaceRef:
-          $ref: '#/components/schemas/TopographicPlaceRef'
+          $ref: "#/components/schemas/TopographicPlaceRef"
+
     PrivateCode:
+      description: Code of this stop point in private/foreign/proprietary coding schemes.
       required:
       - system
       - value
@@ -428,13 +713,9 @@ components:
         value:
           type: string
           example: "6373080"
-    StopPointRef:
-      type: string
-      example: "8503000"
-    StopPlaceRef:
-      type: string
-      example: "8503000"
+
     GeoPosition:
+      description: WGS84 coordinates position
       required:
       - latitude
       - longitude
@@ -451,12 +732,58 @@ components:
         precision:
           type: number
           format: integer
-    TopographicPlaceRef:
-      type: string
-      example: 23036261:27
-    PointOfInterestRef:
+
+    # References
+
+    StopPointRef:
+      description: Reference to a (SCHEDULED) STOP POINT
       type: string
       example: "8503000"
+
+    StopPlaceRef:
+      description: Reference to a Stop Place
+      type: string
+      example: "8503000"
+
+    TopographicPlaceRef:
+      description: Reference to a TopographicPlace
+      type: string
+      example: 23036261:27
+
+    PointOfInterestRef:
+      description: Reference to a Point of Interest
+      type: string
+      example: "8503000"
+
     AddressRef:
+      description: Reference to an Address
       type: string
       example: Segantinistrasse 7, 3006 Bern
+
+    ProductCategoryRef:
+      description: >-
+        A reference to the product category. This is the internal code used within the reference frameworks (NeTEx, SIRI). 
+        It is usually not displayed, but interpreted by the technical system, e.g. "ch:1:TypeOfProductCategory:ARZ" 
+        (Autoreisezug in Switzerland) or "ch:1:TypeOfProductCategory:BAV".
+      type: string
+      example: "ch:1:TypeOfProductCategory:ARZ"
+
+    OperationDayRef:
+      description: Reference to an operating day
+      type: string
+      format: date
+
+    JourneyRef:
+      description: Reference to a journey
+      type: string
+      example: toDo
+
+    LineRef:
+      description: Reference to a line 
+      type: string
+      example: toDo
+      
+    DirectionRef:
+      description: Reference to a line 
+      type: string
+      example: toDo
