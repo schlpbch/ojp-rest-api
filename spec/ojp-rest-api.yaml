@@ -17,7 +17,7 @@ tags:
 - name: Trips
   description: resources to search for trips and locations
 paths:
-  /trips:
+  /ojp-trips:
     post:
       tags:
       - Trips
