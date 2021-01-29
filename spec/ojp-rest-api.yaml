@@ -28,6 +28,33 @@ paths:
         Returns place information for a given place information request based on the OJP specification.
       operationId: postPlaceInformations
       parameters:
+      - name: ParentSpanId
+        in: header
+        description: >-
+          64-bit parent span ID lower-hex encoded into 16 characters
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: SpanId
+        in: header
+        description: >-
+          64-bit span ID lower-hex encoded into 16 characters
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: TraceId
+        in: header
+        description: >-
+          128 or 64-bit trace ID lower-hex encoded into 32 or 16 characters
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       - name: Access-Token
         in: header
         description: >-
@@ -88,6 +115,33 @@ paths:
         Returns trips for a given trip request based on the OJP specification.
       operationId: postTrips
       parameters:
+      - name: ParentSpanId
+        in: header
+        description: >-
+          64-bit parent span ID lower-hex encoded into 16 characters
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: SpanId
+        in: header
+        description: >-
+          64-bit span ID lower-hex encoded into 16 characters
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: TraceId
+        in: header
+        description: >-
+          128 or 64-bit trace ID lower-hex encoded into 32 or 16 characters
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       - name: Access-Token
         in: header
         description: >-
@@ -338,7 +392,7 @@ components:
           $ref: "#/components/schemas/TripDelivery"
 
     TripDelivery:
-      description: ToDo OJPDelivery
+      description: The OJP delivery structure
       required:
       - tripResponseContext
       - tripResult
@@ -895,36 +949,71 @@ components:
         circle:
           $ref: "#/components/schemas/Circle"
         rectangle:
-          type: string 
-          default: toDo    
+          $ref: "#/components/schemas/Rectangle"
         area:
-          type: string 
-          default: toDo
+          $ref: "#/components/schemas/Area"
 
     Circle:
-      description: toDo
       required:
         - center 
         - radius
       type: object
       properties:
         center:
-          type: string
-          default: todo
+          $ref: "#/components/schemas/Location"
         radius:
           description: radius in metres
           type: number
           format: integer
- 
+
+    Rectangle:
+      type: object
+      properties:
+        upperLeft:
+          $ref: "#/components/schemas/Location"
+        lowerLight:
+          $ref: "#/components/schemas/Location"
+
+    Area:
+      description: Area is defined by a polyline
+      type: object
+      properties:
+        point:
+          $ref: "#/components/schemas/PolyPoint"
+
+    PolyPoint:
+      type: array
+      items:
+        $ref: "#/components/schemas/Location"
+
+    Location:
+      type: object
+      properties:
+        latitude:
+          $ref: "#/components/schemas/Latitude"
+        longitude:
+          $ref: "#/components/schemas/Longitude"
+        coordinates:
+          $ref: "#/components/schemas/Coordinates"
+        
     Longitude:
+      description: >-
+        Longitude from Greenwich Meridian. -180 (West) to +180 (East). Decimal degrees. eg 2.356
       type: number
       format: float
       example: 8.54021 
 
     Latitude:
+      description: >-
+        Latitude from equator. -90 (South) to +90 (North). Decimal degrees. eg 56.356
       type: number
       format: float
       example: 47.37818
+  
+    Coordinates:
+      description:
+        Coordinates of points in a GML compatible format, as indicated by srsName attribute.
+      type: string
 
     # References
 
