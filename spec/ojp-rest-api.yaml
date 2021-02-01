@@ -11,13 +11,13 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 0.0.3
 servers:
-- url: https://virtserver.swaggerhub.com/schlpbch/ojp-rest-api/0.0.3
-  description: SwaggerHub API Auto Mocking
+  - url: https://virtserver.swaggerhub.com/schlpbch/ojp-rest-api/0.0.3
+    description: SwaggerHub API Auto Mocking
 tags:
-- name: Place Information
-  description: resource to search for place information (aka. location)
-- name: Trips
-  description: resource to search for trips
+  - name: Place Information
+    description: resource to search for place information (aka. location)
+  - name: Trips
+    description: resource to search for trips
 paths:
   /ojp-place-informations:
     post:
@@ -28,53 +28,36 @@ paths:
         Returns place information for a given place information request based on the OJP specification.
       operationId: postPlaceInformations
       parameters:
-      - name: ParentSpanId
-        in: header
-        description: >-
-          64-bit parent span ID lower-hex encoded into 16 characters
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: SpanId
-        in: header
-        description: >-
-          64-bit span ID lower-hex encoded into 16 characters
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: TraceId
-        in: header
-        description: >-
-          128 or 64-bit trace ID lower-hex encoded into 32 or 16 characters
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: Access-Token
-        in: header
-        description: >-
-          OAuth2 token used to authenticate the consumer API. Refer to the implementation
-          documentation for information on how to get a token.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: Accept-Language
-        in: header
-        description: >-
-          Describes the set of natural languages that are preferred for localized text in
-          the response to the request (see RFC2616-sec14.4).
-        required: false
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - $ref: "#/components/parameters/acceptLanguage"
+        - $ref: "#/components/parameters/accessToken"
+        - name: ParentSpanId
+          in: header
+          description: >-
+            64-bit parent span ID lower-hex encoded into 16 characters
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: SpanId
+          in: header
+          description: >-
+            64-bit span ID lower-hex encoded into 16 characters
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: TraceId
+          in: header
+          description: >-
+            128 or 64-bit trace ID lower-hex encoded into 32 or 16 characters
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+
       requestBody:
         description: request for place information
         content:
@@ -87,13 +70,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OJPPlaceInformationReply"     
+                $ref: "#/components/schemas/OJPPlaceInformationReply"
         "400":
           description: bad input parameter
         "401":
           description: unauthorized
         "403":
-          description: forbidden      
+          description: forbidden
         "404":
           description: no place information found
         "500":
@@ -109,59 +92,42 @@ paths:
   /ojp-trips:
     post:
       tags:
-      - Trips
+        - Trips
       summary: returns trips for a given OJP trip request
       description: >-
         Returns trips for a given trip request based on the OJP specification.
       operationId: postTrips
       parameters:
-      - name: ParentSpanId
-        in: header
-        description: >-
-          64-bit parent span ID lower-hex encoded into 16 characters
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: SpanId
-        in: header
-        description: >-
-          64-bit span ID lower-hex encoded into 16 characters
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: TraceId
-        in: header
-        description: >-
-          128 or 64-bit trace ID lower-hex encoded into 32 or 16 characters
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: Access-Token
-        in: header
-        description: >-
-          OAuth2 token used to authenticate the consumer API. Refer to the implementation
-          documentation for information on how to get a token.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: Accept-Language
-        in: header
-        description: >-
-          Describes the set of natural languages that are preferred for localized text in
-          the response to the request (see RFC2616-sec14.4).
-        required: false
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - $ref: "#/components/parameters/acceptLanguage"
+        - $ref: "#/components/parameters/accessToken"
+        - name: ParentSpanId
+          in: header
+          description: >-
+            64-bit parent span ID lower-hex encoded into 16 characters
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: SpanId
+          in: header
+          description: >-
+            64-bit span ID lower-hex encoded into 16 characters
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: TraceId
+          in: header
+          description: >-
+            128 or 64-bit trace ID lower-hex encoded into 32 or 16 characters
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+
       requestBody:
         description: request for trips
         content:
@@ -182,7 +148,7 @@ paths:
         "401":
           description: unauthorized
         "403":
-          description: forbidden      
+          description: forbidden
         "404":
           description: no trips found
         "500":
@@ -196,13 +162,34 @@ paths:
         "503":
           description: service unavailable
 
-          
 components:
+  parameters:
+    acceptLanguage:
+      name: Accept-Language
+      in: header
+      description: >-
+        Describes the set of natural languages that are preferred for localized text in
+        the response to the request (see RFC2616-sec14.4).
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+
+    accessToken:
+      name: Access-Token
+      in: header
+      description: >-
+        OAuth2 token used to authenticate the consumer API. Refer to the implementation
+        documentation for information on how to get a token.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+
   schemas:
-
-    ## OJP Place Information
-
-    OJPPlaceInformationRequest:
+    OJPPlaceInformationRequest: ## OJP Place Information
       required:
         - initialInput
         - placeRef
@@ -224,7 +211,7 @@ components:
             - $ref: "#/components/schemas/InputName"
             - $ref: "#/components/schemas/GeoPosition"
             - $ref: "#/components/schemas/GeoRestriction"
-        
+
     InputName:
       description: >-
         Name of the place object which is looked after. This is usually the user's input. If not given,
@@ -251,7 +238,7 @@ components:
         results:
           type: array
           items:
-            $ref: "#/components/schemas/Place" 
+            $ref: "#/components/schemas/Place"
         complete:
           description: >-
             States whether the included place is complete or needs further refinement. Only complete places
@@ -263,19 +250,17 @@ components:
           type: number
           format: float
         modes:
-          description: 
+          description:
             List of transport modes that call at this place object. This list should only be filled in case of
             stop points or stop places – and only when explicitly requested.
           type: array
           items:
             $ref: "#/components/schemas/Mode"
 
-    ## OJP-Trip
-
-    OJPTripRequest:
+    OJPTripRequest: ## OJP-TripRequest
       required:
-      - destination
-      - origin
+        - destination
+        - origin
       type: object
       properties:
         origin:
@@ -309,19 +294,19 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StopPointRef"
             - $ref: "#/components/schemas/StopPlaceRef"
-        params: 
+        params:
           description: >-
             Options to control the search behaviour and response contents.
           type: string
           example: toDo preferably as REST parameters
 
-    PlaceContext: 
+    PlaceContext:
       type: object
       properties:
         place:
           oneOf:
-          - $ref: "#/components/schemas/PlaceRef"
-          - $ref: "#/components/schemas/TripPlace"
+            - $ref: "#/components/schemas/PlaceRef"
+            - $ref: "#/components/schemas/TripPlace"
         depArrTime:
           type: string
           format: date-time
@@ -331,18 +316,18 @@ components:
     PlaceRef:
       description: Static place
       required:
-      - name
-      - ref
+        - name
+        - ref
       type: object
       properties:
         ref:
           oneOf:
-          - $ref: "#/components/schemas/StopPointRef"
-          - $ref: "#/components/schemas/StopPlaceRef"
-          - $ref: "#/components/schemas/GeoPosition"
-          - $ref: "#/components/schemas/TopographicPlaceRef"
-          - $ref: "#/components/schemas/PointOfInterestRef"
-          - $ref: "#/components/schemas/AddressRef"
+            - $ref: "#/components/schemas/StopPointRef"
+            - $ref: "#/components/schemas/StopPlaceRef"
+            - $ref: "#/components/schemas/GeoPosition"
+            - $ref: "#/components/schemas/TopographicPlaceRef"
+            - $ref: "#/components/schemas/PointOfInterestRef"
+            - $ref: "#/components/schemas/AddressRef"
         name:
           type: string
           example: Bern
@@ -351,18 +336,18 @@ components:
       description: >-
         Reference to specify the via place. Todo - Why not use PlaceRef?
       required:
-      - name
-      - ref
+        - name
+        - ref
       type: object
       properties:
         ref:
           oneOf:
-          - $ref: "#/components/schemas/StopPointRef"
-          - $ref: "#/components/schemas/StopPlaceRef"
-          - $ref: "#/components/schemas/GeoPosition"
-          - $ref: "#/components/schemas/TopographicPlaceRef"
-          - $ref: "#/components/schemas/PointOfInterestRef"
-          - $ref: "#/components/schemas/AddressRef"
+            - $ref: "#/components/schemas/StopPointRef"
+            - $ref: "#/components/schemas/StopPlaceRef"
+            - $ref: "#/components/schemas/GeoPosition"
+            - $ref: "#/components/schemas/TopographicPlaceRef"
+            - $ref: "#/components/schemas/PointOfInterestRef"
+            - $ref: "#/components/schemas/AddressRef"
         name:
           type: string
           example: Bern
@@ -372,7 +357,7 @@ components:
         A trip place represents the current logical position of a  journey service. It can be 
         used similarly to a place e.g. for starting a new trip requests from within this service. 
         A trip place does not(!) describe the relative position of a traveller within a vehicle, 
-        e.g. the seat.      
+        e.g. the seat.
       type: object
       required:
         - operatingDayRef
@@ -385,7 +370,7 @@ components:
 
     OJPTripReply:
       required:
-      - tripDelivery
+        - tripDelivery
       type: object
       properties:
         tripDelivery:
@@ -394,8 +379,8 @@ components:
     TripDelivery:
       description: The OJP delivery structure
       required:
-      - tripResponseContext
-      - tripResult
+        - tripResponseContext
+        - tripResult
       type: object
       properties:
         tripResponseContext:
@@ -408,19 +393,19 @@ components:
     TripResult:
       description: The trip results found by the server
       required:
-      - timedLeg
+        - timedLeg
       type: object
       properties:
         trip:
           oneOf:
-          - $ref: "#/components/schemas/Trip"
-          - $ref: "#/components/schemas/TripSummary"
+            - $ref: "#/components/schemas/Trip"
+            - $ref: "#/components/schemas/TripSummary"
 
     Trip:
       description: A complete trip from origin to destination
       required:
-      - tripId
-      - tripLegs
+        - tripId
+        - tripLegs
       type: object
       properties:
         tripId:
@@ -505,27 +490,27 @@ components:
     TripLeg:
       description: trip leg
       required:
-      - legs
+        - legs
       type: object
       properties:
         legId:
-          description: Id of this trip leg. Unique within trip result. 
+          description: Id of this trip leg. Unique within trip result.
           type: string
           format: uuid
         legs:
           type: array
           items:
             oneOf:
-            - $ref: "#/components/schemas/TimedLeg"
-            - $ref: "#/components/schemas/TransferLeg"
-            - $ref: "#/components/schemas/ContinuousLeg"
+              - $ref: "#/components/schemas/TimedLeg"
+              - $ref: "#/components/schemas/TransferLeg"
+              - $ref: "#/components/schemas/ContinuousLeg"
 
     TimedLeg:
       description: ToDo
       required:
-      - legAlight
-      - legBoard
-      - service
+        - legAlight
+        - legBoard
+        - service
       type: object
       properties:
         legBoard:
@@ -542,10 +527,10 @@ components:
         [A specialized type of NAVIGATION PATH in TMv6] description of a LEG which links
         other LEGs of a TRIP where a TRANSFER between different LOCATIONs is required.
       required:
-      - legStart
-      - legEnd
-      - timeWindow
-      - transferMode
+        - legStart
+        - legEnd
+        - timeWindow
+        - transferMode
       type: object
       properties:
         transferMode:
@@ -583,11 +568,11 @@ components:
         [Relates to a specific type of RIDE in TM and NeTEx] leg of a journey that is not
         bound to a timetable.
       required:
-      - legStart
-      - legEnd
-      - service
-      - timeWindow
-      - transferMode
+        - legStart
+        - legEnd
+        - service
+        - timeWindow
+        - transferMode
       type: object
       properties:
         transferMode:
@@ -640,13 +625,13 @@ components:
           format: date-time
 
     LegBoard:
-      description: Stop/Station where boarding is done 
+      description: Stop/Station where boarding is done
       required:
-      - order
-      - plannedQuay
-      - serviceDeparture
-      - stopPointName
-      - stopPointRef
+        - order
+        - plannedQuay
+        - serviceDeparture
+        - stopPointName
+        - stopPointRef
       type: object
       properties:
         stopPointRef:
@@ -672,8 +657,8 @@ components:
         Describes the departure situation at this leg board stop point (group of attributes
         of TIMETABLED PASSING TIME, ESTIMATED PASSING TIME, OBSERVED PASSING TIME).
       required:
-      - estimatedTime
-      - timetabledTime
+        - estimatedTime
+        - timetabledTime
       type: object
       properties:
         timetabledTime:
@@ -737,7 +722,7 @@ components:
           $ref: "#/components/schemas/LineRef"
         directionRef: #optional
           $ref: "#/components/schemas/DirectionRef"
-               
+
         mode:
           $ref: "#/components/schemas/Mode"
         productCategory: #optional
@@ -779,14 +764,14 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Attribute"
-    
+
     Mode:
       description: A method of transportation such as bus, rail, etc.
       required:
-      - directionRef
-      - lineRef
-      - ptMode
-      - railSubMode
+        - directionRef
+        - lineRef
+        - ptMode
+        - railSubMode
       type: object
       properties:
         ptMode:
@@ -811,13 +796,13 @@ components:
       description: PT transport sub mode. ToDo
       type: string
       enum:
-       - AIR_SUB_MODE
-       - BUS_SUB_MODE
-       - COACH_SUB_MODE
-       - METRO_SUB_MODE
-       - RAIL_SUB_MODE
-       - TRAM_SUB_MODE
-       - WATER_SUB_MODE
+        - AIR_SUB_MODE
+        - BUS_SUB_MODE
+        - COACH_SUB_MODE
+        - METRO_SUB_MODE
+        - RAIL_SUB_MODE
+        - TRAM_SUB_MODE
+        - WATER_SUB_MODE
       default: RAIL_SUB_MODE
 
     ProductCategory:
@@ -845,8 +830,8 @@ components:
     Attribute:
       description: Note or service attribute.
       required:
-      - code
-      - text
+        - code
+        - text
       type: object
       properties:
         text:
@@ -876,9 +861,9 @@ components:
     Place:
       description: Model of a place
       required:
-      - geoPosition
-      - name
-      - stopPlace
+        - geoPosition
+        - name
+        - stopPlace
       type: object
       properties:
         stopPlace:
@@ -892,9 +877,9 @@ components:
     StopPlace:
       description: Model of a stop place
       required:
-      - privateCode
-      - stopPlaceName
-      - stopPlaceRef
+        - privateCode
+        - stopPlaceName
+        - stopPlaceRef
       type: object
       properties:
         stopPlaceRef:
@@ -910,8 +895,8 @@ components:
     PrivateCode:
       description: Code of this stop point in private/foreign/proprietary coding schemes.
       required:
-      - system
-      - value
+        - system
+        - value
       type: object
       properties:
         system:
@@ -924,8 +909,8 @@ components:
     GeoPosition:
       description: WGS84 coordinates position
       required:
-      - latitude
-      - longitude
+        - latitude
+        - longitude
       type: object
       properties:
         longitude:
@@ -955,7 +940,7 @@ components:
 
     Circle:
       required:
-        - center 
+        - center
         - radius
       type: object
       properties:
@@ -995,13 +980,13 @@ components:
           $ref: "#/components/schemas/Longitude"
         coordinates:
           $ref: "#/components/schemas/Coordinates"
-        
+
     Longitude:
       description: >-
         Longitude from Greenwich Meridian. -180 (West) to +180 (East). Decimal degrees. eg 2.356
       type: number
       format: float
-      example: 8.54021 
+      example: 8.54021
 
     Latitude:
       description: >-
@@ -1009,10 +994,9 @@ components:
       type: number
       format: float
       example: 47.37818
-  
+
     Coordinates:
-      description:
-        Coordinates of points in a GML compatible format, as indicated by srsName attribute.
+      description: Coordinates of points in a GML compatible format, as indicated by srsName attribute.
       type: string
 
     # References
@@ -1061,16 +1045,16 @@ components:
       example: toDo
 
     LineRef:
-      description: Reference to a line 
+      description: Reference to a line
       type: string
       example: toDo
 
     DirectionRef:
-      description: Reference to a line 
+      description: Reference to a line
       type: string
       example: toDo
 
-    # Problem for HTTP APIs (RFC 7807) 
+    # Problem for HTTP APIs (RFC 7807)
 
     Problem:
       type: object
@@ -1087,8 +1071,8 @@ components:
             An absolute URI that identifies the problem type. When dereferenced,
             it SHOULD provide human-readable documentation for the problem type
             (e.g., using HTML).
-          default: 'about:blank'
-          example: 'https://example.com/probs/passenger-too-young'
+          default: "about:blank"
+          example: "https://example.com/probs/passenger-too-young"
         title:
           type: string
           description: >-

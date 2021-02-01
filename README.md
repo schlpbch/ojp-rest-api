@@ -18,6 +18,7 @@ The API is published on [SwaggerHub](https://app.swaggerhub.com/apis/schlpbch/oj
 - [ ] Complete API
 - [ ] Clarify Modelling of `Service`, `Attribute` and `Extension`
 - [ ] Map OJP entities to UIC entities
+- [ ] Officialize implementation
 
 ## Thanks
 
