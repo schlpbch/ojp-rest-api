@@ -490,6 +490,7 @@ components:
     TripLeg:
       description: trip leg
       required:
+        - legId
         - legs
       type: object
       properties:
@@ -497,6 +498,9 @@ components:
           description: Id of this trip leg. Unique within trip result.
           type: string
           format: uuid
+        participantRef:
+          description: IT system that is participating in a communication with other participant(s)
+          type: string
         legs:
           type: array
           items:
