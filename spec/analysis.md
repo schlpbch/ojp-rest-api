@@ -8,7 +8,7 @@ Mapping of XML to JSON:
 - `OJPTripInfo` to `/ojp-trips`
 
 While the mapping feels quite straight forward, however some design
-decision need to be taken
+decision need to be taken. Thoughts on them are described below:
 
 ## Topics
 
@@ -77,17 +77,19 @@ decision need to be taken
       "part": "participantRef",
       "legs:"
         [
-            {...}
+            {"..."}
         ]
   }
   ```
 
-  This leads to a `legs` attribute not part of the `XSD` specification.
+  But, this leads to a `legs` attribute not part of the `XSD` specification.
 
   The simplest approach would be to redesign the `XSD` accordingly.
 
 - Granularity of resources
-
+  
+  - Todo
+  
 - Mapping of `Parameter`
   
   - Option 1: as `Parameter` in `body`
