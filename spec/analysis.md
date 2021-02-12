@@ -82,13 +82,15 @@ decision need to be taken. Thoughts on them are described below:
   }
   ```
 
-  But, this leads to a `legs` attribute not part of the `XSD` specification.
+  But, this leads to a `legs` attribute not part of the `XSD` specification. 
+  
+  *Todo*: Determine whether this is a problem?
 
   The simplest approach would be to redesign the `XSD` accordingly.
 
 - Granularity of resources
   
-  - Todo
+  - *Todo*
   
 - Mapping of `Parameter`
   
