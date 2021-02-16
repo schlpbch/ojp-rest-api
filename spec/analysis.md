@@ -63,7 +63,7 @@ decision need to be taken. Thoughts on them are described below:
         legs:
           type: array
           items:
-            oneOf:
+            anyOf:
               - $ref: "#/components/schemas/TimedLeg"
               - $ref: "#/components/schemas/TransferLeg"
               - $ref: "#/components/schemas/ContinuousLeg"
