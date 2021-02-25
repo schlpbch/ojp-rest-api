@@ -8,7 +8,8 @@ Mapping of XML to JSON:
 - `OJPTripInfo` to `/ojp-trips`
 
 While the mapping feels quite straight forward, however some design
-decision need to be taken. Thoughts on them are described below:
+decision need to be taken. Thoughts on topics identified are described
+below:
 
 ## Topics
 
@@ -82,7 +83,7 @@ decision need to be taken. Thoughts on them are described below:
   }
   ```
 
-  But, this leads to a `legs` attribute not part of the `XSD` specification. 
+  But, this leads to a `legs` attribute not part of the `XSD` specification.
   
   *Todo*: Determine whether this is a problem.
 
