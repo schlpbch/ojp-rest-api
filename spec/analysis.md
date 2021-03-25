@@ -113,7 +113,7 @@ below:
       schema:
         type: string
     ```
-   More lightweight and more REST, however can lead to many queries.  
+   More lightweight and more REST, however can lead to many queries or not doable in case of deeply nested structures.
 
 - Modelling of `Extension`:
   
