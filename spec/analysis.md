@@ -96,6 +96,9 @@ below:
 - Mapping of `Parameter`
   
   - Option 1: as `Parameter` in `body`
+
+     `GET`with a body is undefined, so we would need a `POST`.
+   
   - Option 2: as `parameter` of a `query`, e.g.,:
 
     ```yml
@@ -110,13 +113,14 @@ below:
       schema:
         type: string
     ```
+   More lightweight and more REST, however can lead to many queries or even not doable in case of deeply nested structures.
 
 - Modelling of `Extension`:
   
   - Option 1: as `Extension` in `body`
-  - Option 2: as optional parameters
+  - Option 2: as optional atribures
 
 - Modelling of `Attribute`:
   
   - Option 1: as `Attribute` in `Body`
-  - Option 2: as optional parameters
+  - Option 2: as optional attributes
