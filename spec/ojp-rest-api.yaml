@@ -405,7 +405,7 @@ components:
       description: A complete trip from origin to destination
       required:
         - tripId
-        - tripLegs
+        - Legs
       type: object
       properties:
         tripId:
@@ -435,11 +435,11 @@ components:
           type: number
           format: integer
           minimum: 0
-        tripLegs:
+        Legs:
           description: Legs ot the trip
           type: array
           items:
-            $ref: "#/components/schemas/TripLeg"
+            $ref: "#/components/schemas/Leg"
 
     TripSummary:
       description: >-
@@ -471,7 +471,7 @@ components:
           description: Arrival time at destination
           type: string
           format: date-time
-        pTTripLegs:
+        pTLegs:
           description: Number of public transport trip legs
           type: number
           format: integer
@@ -481,13 +481,13 @@ components:
           type: number
           format: integer
           minimum: 0
-        tripLegs:
+        Legs:
           description: Legs ot the trip
           type: array
           items:
-            $ref: "#/components/schemas/TripLeg"
+            $ref: "#/components/schemas/Leg"
 
-    TripLeg:
+    Leg:
       description: trip leg
       required:
         - legId
