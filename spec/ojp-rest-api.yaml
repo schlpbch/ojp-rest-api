@@ -435,7 +435,7 @@ components:
           type: number
           format: integer
           minimum: 0
-        Legs:
+        legs:
           description: Legs ot the trip
           type: array
           items:
@@ -481,7 +481,7 @@ components:
           type: number
           format: integer
           minimum: 0
-        Legs:
+        legs:
           description: Legs ot the trip
           type: array
           items:
