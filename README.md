@@ -3,7 +3,7 @@
 Models part of the Open Journey Planner (OJP) API as a REST service.
 
 Based on [VDVde/OJP GitHub Repository](https://github.com/VDVde/OJP/tree/changes_for_v1.1), here you
-cand find a [beautiful visualisation](https://jmaerki.github.io/OJP/generated/OJP.html).
+can find a [beautiful visualization](https://jmaerki.github.io/OJP/generated/OJP.html).
 
 ## Scope
 
