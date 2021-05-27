@@ -297,8 +297,7 @@ components:
         params:
           description: >-
             Options to control the search behaviour and response contents.
-          type: string
-          example: toDo preferably as REST parameters
+          $ref: "#/components/schemas/TripParam"
 
     PlaceContext:
       type: object
@@ -367,6 +366,36 @@ components:
           $ref: "#/components/schemas/OperationDayRef"
         journeyRef:
           $ref: "#/components/schemas/JourneyRef"
+
+    TripParam:
+      description: 
+        Options to control the search behaviour and response contents.
+      type: object
+      properties:
+        levelEntrance:
+          description: >-
+            The user needs vehicles with level entrance between platform and vehicle, f.e. 
+            for wheelchair access.
+          type: boolean
+          default: false
+        bikeTransport:
+          description: >-
+            The user wants to carry a bike on public transport.
+          type: boolean
+          default: false
+        walkSpeed:
+          description: >-
+            Deviation from average walk speed in percent. 100% percent is average speed. 
+            Less than 100 % slower, Greater than 150% faster.
+          type: number
+          format: int
+          default: 100
+        additionalTransferTime:
+          description: >-
+            Additional time added to all transfers (also to transfers between individual to
+            public transport).
+          type: string
+          format: duration
 
     OJPTripReply:
       required:
