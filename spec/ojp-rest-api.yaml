@@ -530,13 +530,11 @@ components:
         participantRef:
           description: IT system that is participating in a communication with other participant(s)
           type: string
-        legs:
-          type: array
-          items:
-            oneOf:
-              - $ref: "#/components/schemas/TimedLeg"
-              - $ref: "#/components/schemas/TransferLeg"
-              - $ref: "#/components/schemas/ContinuousLeg"
+        tripLeg:
+          oneOf:
+            - $ref: "#/components/schemas/TimedLeg"
+            - $ref: "#/components/schemas/TransferLeg"
+            - $ref: "#/components/schemas/ContinuousLeg"
 
     TimedLeg:
       description: ToDo
