@@ -27,7 +27,7 @@ Here's a possible setup to work: [Visual Studio Code](https://code.visualstudio.
 
 - [Swagger Viewer](https://marketplace.visualstudio.com/items?itemName=Arjun.swagger-viewer)  
 - [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
-- [OpenAPI (Swagger)](https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi
+- [OpenAPI (Swagger)](https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi)
 
 ## Thanks
 
