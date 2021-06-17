@@ -567,7 +567,8 @@ components:
             #   type: string
 
     TimedLeg:
-      description: ToDo
+      description: >-
+        A leg which is bound to a timetabled schedule. Corresponds to a RIDE.
       required:
         - legAlight
         - legBoard
@@ -597,8 +598,7 @@ components:
 
     TransferLeg:
       description: >-
-        [A specialized type of NAVIGATION PATH in TMv6] description of a LEG which links
-        other LEGs of a TRIP where a TRANSFER between different LOCATIONs is required.
+        A leg which links other legs of a trip where a transfer between different locations is required.
       required:
         - legStart
         - legEnd
@@ -623,7 +623,7 @@ components:
 
     ContinuousLeg:
       description: >-
-        Leg of a journey that is not bound to a timetable.
+        A leg of a journey that is not bound to a timetable.
       required:
         - legStart
         - legEnd
