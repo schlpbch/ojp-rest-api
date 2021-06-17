@@ -693,6 +693,7 @@ components:
       default: WALK
     
     IndividualMode:
+      description: Modes which an individual powers themselves (such as walk, cycle).
       type: string
       enum:
         - WALK 
@@ -950,20 +951,6 @@ components:
           example: ARZ
         productCategoryRef:
           $ref: "#/components/schemas/ProductCategoryRef"
-
-    Attribute:
-      description: Note or service attribute.
-      required:
-        - code
-        - text
-      type: object
-      properties:
-        text:
-          type: string
-          example: Maskenpflicht für Reisende ab 12 Jahren
-        code:
-          type: string
-          example: A__OM
 
     Place:
       description: Model of a place
