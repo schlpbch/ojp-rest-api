@@ -639,10 +639,7 @@ components:
           description: Stop/Station to alight
           $ref: "#/components/schemas/PlaceRef"
         service:
-          description: >-
-            Service of this leg. May be "walk" in most cases, but also cycling or taxi etc.
-          type: string
-          example: toDi
+          $ref: "#/components/schemas/ContinuousService"
         # timeWindow:  # out of scope
         #  $ref: "#/components/schemas/TimeWindow"
         duration:
