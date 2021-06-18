@@ -446,8 +446,8 @@ components:
           format: uuid
         trip:
           $ref: "#/components/schemas/Trip"
-        # tripSummary:   # Out of scope
-        #  $ref: "#/components/schemas/TripSummary"
+        tripSummary:
+          $ref: "#/components/schemas/TripSummary"
         # tripFare:  # Out of Scope
         #  $ref: "#/components/schemas/TripFare"
 
@@ -499,6 +499,47 @@ components:
         tripStatus:   # Ask Stefan
           $ref: "#/components/schemas/TripStatus"
  
+    TripSummary:
+      description: A complete trip from origin to destination
+      required:
+        - tripId
+      type: object
+      properties:
+        tripId:
+          description: >-
+            Id of this trip for referencing purposes. Unique within trip response.
+          type: string
+          format: uuid
+        origin:
+          description: >-
+            Specifies the origin situation from where the user wants to start.
+          $ref: "#/components/schemas/PlaceContext"
+        destination:
+          description: >-
+            Specifies the destination situation where the user is heading to.
+          $ref: "#/components/schemas/PlaceContext"
+        duration:
+          description: Overall duration of the trip
+          type: string
+          example: to specify
+        startTime:
+          description: Departure time at origin.
+          type: string
+          format: date-time
+        endTime:
+          description: Arrival time at destination
+          type: string
+          format: date-time
+        distance:
+          description: Trip distance
+          type: number
+          format: integer
+          minimum: 0
+        operatingDays:   # Ask Stefan
+          $ref: "#/components/schemas/OperatingDayz"
+        tripStatus:   # Ask Stefan
+          $ref: "#/components/schemas/TripStatus"
+
     OperatingDayz:  # FIXME
       type: object
       properties:
