@@ -9,7 +9,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.0.5
+  version: 0.1.0
 tags:
   - name: Place Information
     description: resource to search for place information (aka. location)
@@ -346,7 +346,7 @@ components:
           - $ref: "#/components/schemas/StopPointRef"
           - $ref: "#/components/schemas/StopPlaceRef"
           - $ref: "#/components/schemas/GeoPosition"
-          - $ref: "#/components/schemas/TopographicPlaceRef"
+          # - $ref: "#/components/schemas/TopographicPlaceRef"  # Out of scope
           - $ref: "#/components/schemas/PointOfInterestRef"
           - $ref: "#/components/schemas/AddressRef"
         - type: object
@@ -998,7 +998,7 @@ components:
         - $ref: "#/components/schemas/PointOfInterest"
         - $ref: "#/components/schemas/StopPlace"
         - $ref: "#/components/schemas/StopPoint"
-        - $ref: "#/components/schemas/TopographicPlace"
+#        - $ref: "#/components/schemas/TopographicPlace"
       - type: object
         properties:
           name:
@@ -1036,16 +1036,11 @@ components:
           example: Zürich HB
         privateCode:
           $ref: "#/components/schemas/PrivateCode"
-        topographicPlaceRef:
-          $ref: "#/components/schemas/TopographicPlaceRef"
+        #topographicPlaceRef:
+        #  $ref: "#/components/schemas/TopographicPlaceRef"
 
     StopPoint:
       description: Model of a stop point
-      type: string
-      default: todo
-
-    TopographicPlace:
-      description: TopographicPlace. Region, village, or city.
       type: string
       default: todo
 
@@ -1104,11 +1099,6 @@ components:
       description: Reference to a Stop Place
       type: string
       example: "8503000"
-
-    TopographicPlaceRef:
-      description: Reference to a TopographicPlace
-      type: string
-      example: 23036261:27
 
     PointOfInterestRef:
       description: Reference to a Point of Interest
