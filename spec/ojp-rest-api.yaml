@@ -197,7 +197,7 @@ components:
     PlaceParam:
       description: >-
         More parameters for restricting the request.
-      allOf:
+      allOf:  # Easy fix: inline PlacePolicy
 #        - $ref: "#/components/schemas/PlaceDataFilter"   # Out of scope
         - $ref: "#/components/schemas/PlacePolicy"
         
@@ -869,7 +869,7 @@ components:
       description: >-
         Describes the departure situation at this leg board stop point (group of attributes
         of TIMETABLED PASSING TIME, ESTIMATED PASSING TIME, OBSERVED PASSING TIME).
-      allOf:
+      allOf: # Easy fix: Inline Service Time
         - $ref: "#/components/schemas/ServiceTime"  
         # - $ref: "#/components/schemas/EstimatedTimeBand"   #Out of scope
 
@@ -877,7 +877,7 @@ components:
       description: >-
         Describes the departure situation at this leg board stop point (group of attributes
         of TIMETABLED PASSING TIME, ESTIMATED PASSING TIME, OBSERVED PASSING TIME).
-      allOf:
+      allOf: # Easy fix: Inline Service Time
         - $ref: "#/components/schemas/ServiceTime"
         # - $ref: "#/components/schemas/EstimatedTimeBand"   #Out of scope
 
