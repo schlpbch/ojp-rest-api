@@ -184,16 +184,19 @@ components:
         type: string
 
   schemas:
+    ## CHECKED
     PlaceInformationRequest: ## OJP Place Information
       allOf:
         - oneOf: 
-          - $ref: "#/components/schemas/InitialInput"
+          - $ref: "#/components/schemas/InitialPlaceInput"
           - $ref: "#/components/schemas/PlaceRef"
         - type: object
           properties:
             restrictions:
               $ref: "#/components/schemas/PlaceParam"
+            # extensions:
 
+    # CHECKED
     PlaceParam:
       description: >-
         More parameters for restricting the request.
@@ -201,6 +204,7 @@ components:
 #        - $ref: "#/components/schemas/PlaceDataFilter"   # Out of scope
         - $ref: "#/components/schemas/PlacePolicy"
         
+    ## CHECKED
     PlacePolicy:
       properties:
         #language:   # Not supported, language shall be set in header
@@ -210,33 +214,38 @@ components:
             Maximum number of results to be returned. The service is allowed to return fewer objects if reasonable
             or otherwise appropriate.
           type: number
-          format: int
+          format: int32
+          minimum: 1
         #continueAt:   # Out of scope
         #  type: number
-        #  format: int
+        #  format: int32
         #includePtModes:    # Out of scope
         #  type: boolean
 
-    InitialInput:
-      required:
-        - initialInput
-        - placeRef
+
+    ## CHECKED
+    InitialPlaceInput:
       type: object
       properties:
         initialInput:
           anyOf:
-            - $ref: "#/components/schemas/InputName"
+            - $ref: "#/components/schemas/Name"
             - $ref: "#/components/schemas/GeoPosition"
   #         - $ref: "#/components/schemas/GeoRestriction"   # Out of scope
   #         - $ref: "#/components/schemas/AllowedSystemId"    # Out of scope
 
-    InputName:
+    ## CHECKED
+    Name:
       description: >-
         Name of the place object which is looked after. This is usually the user's input. If not given,
         the name of the resulting place objects is not relevant.
-      type: string
-      example: "Bern Bärengraben"
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Bern Bärengraben"
 
+    ## CHECKED
     PlaceInformationResponse:
       type: object
       properties:
@@ -249,16 +258,15 @@ components:
           items:
             $ref: "#/components/schemas/PlaceResult"
 
+    ## CHECKED
     PlaceResult:
       type: object
       required:
         - results
         - complete
       properties:
-        results:
-          type: array
-          items:
-            $ref: "#/components/schemas/Place"
+        place:
+          $ref: "#/components/schemas/Place"  
         complete:
           description: >-
             States whether the included place is complete or needs further refinement. Only complete places
@@ -270,6 +278,8 @@ components:
             Probability, that this result is the one meant by the user's input. Value should be between 0 and 1.
           type: number
           format: float
+          minimum: 0.0
+          maximum: 1.0
         modes:
           description:
             List of transport modes that call at this place object. This list should only be filled in case of
@@ -286,14 +296,17 @@ components:
         - origin
       type: object
       properties:
+        # Array out of Scope
         origin:
           description: >-
             Specifies the origin situation from where the user wants to start.
           $ref: "#/components/schemas/PlaceContext"
+        # Array out of Scope
         destination:
           description: >-
             Specifies the destination situation where the user is heading to.
           $ref: "#/components/schemas/PlaceContext"
+        # Array out of Scope
         via:
           description: >-
             Ordered series of points where the journey must pass through. If more
@@ -335,9 +348,11 @@ components:
               format: date-time
             # timeAllowance:   # Out of scope
             #  type: string
+            #  format: duration
             #individualTransportOptions:   # Out of scope
             #  $ref: "#/components/schemas/IndividualTransportOptions"
 
+    ## CHECKED
     PlaceRef:
       description: >-
         Reference to a geographic PLACE of any type which may be specified as the origin or destination of a trip.
@@ -392,34 +407,66 @@ components:
         - numberOfResultsAfter
       properties:
         ### Other attributes are out of scope
-        levelEntrance:
-          description: >-
-            The user needs vehicles with level entrance between platform and vehicle, f.e. 
-            for wheelchair access.
-          type: boolean
-          default: false
-        bikeTransport:
-          description: >-
-            The user wants to carry a bike on public transport.
-          type: boolean
-          default: false
-        walkSpeed:
-          description: >-
-            Deviation from average walk speed in percent. 100% percent is average speed. 
-            Less than 100 % slower, Greater than 150% faster.
-          type: number
-          format: int
-          default: 100
-        additionalTransferTime:
-          description: >-
-            Additional time added to all transfers (also to transfers between individual to
-            public transport).
-          type: string
-          format: duration
-        numberOfResultsBefore:
-          type: number
-          format: int32
-          default: 0
+        # PtModeFilter
+        # LineFilter
+        # OperatorFilter
+        # PrivateModeFilter
+
+        tripMobilityFilter:
+          type: object
+          properties:
+            levelEntrance:
+              description: >-
+                The user needs vehicles with level entrance between platform and vehicle, f.e. 
+                for wheelchair access.
+              type: boolean
+              default: false
+            bikeTransport:
+              description: >-
+                The user wants to carry a bike on public transport.
+              type: boolean
+              default: false
+            walkSpeed:
+              description: >-
+                Deviation from average walk speed in percent. 100% percent is average speed. 
+                Less than 100 % slower, Greater than 150% faster.
+              type: number
+              format: int8
+              default: 100
+            additionalTransferTime:
+              description: >-
+                Additional time added to all transfers (also to transfers between individual to
+                public transport).
+              type: string
+              format: duration
+              
+          baseTripPolicy:
+            type: object
+            allOf:
+              - oneOf:
+                  NumberOfResults:
+                  type: number
+                  format: int32
+                  default: 0
+
+          - $ref: "#/components/schemas/StopPointRef"
+          - $ref: "#/components/schemas/StopPlaceRef"
+          - $ref: "#/components/schemas/GeoPosition"
+          # - $ref: "#/components/schemas/TopographicPlaceRef"  # Out of scope
+          - $ref: "#/components/schemas/PointOfInterestRef"
+          - $ref: "#/components/schemas/AddressRef"
+        - type: object
+          properties:
+            name:
+              type: string
+              example: Bern
+
+
+        # THIS IS WRONG
+                         numberOfResultsBefore:
+                  type: number
+                  format: int32
+                  default: 0 
         numberOfResultsAfter:
           type: number
           format: int32
@@ -933,18 +980,20 @@ components:
           type: string
           example: ojp:11
 
+    ## CHECKED
     Mode:
       description: A method of transportation such as bus, rail, etc.
       required:
         - ptMode
       type: object
       properties:
-        ptMode:
-          $ref: "#/components/schemas/PTModeChoiceGroup"
+        # Out of Scope
+        # ptMode:
+        #   $ref: "#/components/schemas/PTModeChoiceGroup"
         name:
           description: Name of the mode
           type: string
-          example: Zug
+          example: rail
         shortName:
           description: Short name or acronym of the mode
           type: string
@@ -952,21 +1001,6 @@ components:
         description:
           description: Additional text that further describes the mode
           type: string
-
-    PTModeChoiceGroup:
-      description: Public transport sub modes.
-      type: string
-      enum:
-        - AIR_SUB_MODE
-        - BUS_SUB_MODE
-        - COACH_SUB_MODE
-        - FUNICULAR_SUB_MODE
-        - METRO_SUB_MODE
-        - TRAM_SUB_MODE
-        - TELECABIN_SUB_MODE
-        - RAIL_SUB_MODE
-        - WATER_SUB_MODE
-      default: RAIL_SUB_MODE
 
     ProductCategory:
       description: >-
@@ -990,6 +1024,7 @@ components:
         productCategoryRef:
           $ref: "#/components/schemas/ProductCategoryRef"
 
+    ## CHECKED
     Place:
       description: Model of a place
       allOf:
@@ -1069,10 +1104,8 @@ components:
           $ref: "#/components/schemas/Longitude"
         latitude:
           $ref: "#/components/schemas/Latitude"
-        precision:
-          description: precision for point measurement in meters
-          type: number
-          format: integer
+        altitude:
+          $ref: "#/components/schemas/Altitude"
 
     Longitude:
       description: >-
@@ -1080,6 +1113,8 @@ components:
       type: number
       format: float
       example: 8.54021
+      minimum: -180.0
+      maximum: 180.0
 
     Latitude:
       description: >-
@@ -1087,6 +1122,14 @@ components:
       type: number
       format: float
       example: 47.37818
+      minimum: -90.0
+      maximum: 90.0
+
+    Altitude:
+      description: Altitude metres from sea level.
+      type: number
+      format: float
+      example: 0.0
 
     # References
 
@@ -1108,7 +1151,7 @@ components:
     AddressRef:
       description: Reference to an Address
       type: string
-      example: Segantinistrasse 7, 3006 Bern
+      example: "1234567"
 
     ProductCategoryRef:
       description: >-
