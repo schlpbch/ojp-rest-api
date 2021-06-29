@@ -189,7 +189,7 @@ components:
       allOf:
         - oneOf: 
           - $ref: "#/components/schemas/InitialPlaceInput"
-          - $ref: "#/components/schemas/PlaceRef"
+          - $ref: "#/components/schemas/PlaceRefStructure"
         - type: object
           properties:
             restrictions:
@@ -335,23 +335,128 @@ components:
             Options to control the search behaviour and response contents.
           $ref: "#/components/schemas/TripParam"
 
+
+    DepArrTimeStructure:
+      type: object
+      properties:
+        depArrTime:
+          type: string
+          format: date-time
+      required:
+        - depArrTime
+
+    TimeAllowanceStructure:
+      type: object
+      properties:
+        timeAllowance:
+          type: string
+          format: duration
+          example: "120S"
+      required:
+        - timeAllowance
+
+    PlacePlaceStructure:
+      oneOf:
+        - $ref: "#/components/schemas/PlaceRefStructure"
+        - $ref: "#/components/schemas/TripPlaceStructure"
+
+    PlaceTimeStructure:
+      oneOf:
+        - $ref: "#/components/schemas/DepArrTimeStructure"
+        - $ref: "#/components/schemas/TimeAllowanceStructure"
+
     ## CHECKED
     PlaceContext:
       type: object
-      allOf:
-        - oneOf:
-          - $ref: "#/components/schemas/PlaceRef"
-          - $ref: "#/components/schemas/TripPlace"
-        - type: object
-          properties:
-            depArrTime:
-              type: string
-              format: date-time
-            # timeAllowance:   # Out of scope
-            #  type: string
-            #  format: duration
-            #individualTransportOptions:   # Out of scope
-            #  $ref: "#/components/schemas/IndividualTransportOptions"
+      # NOTICE: there is a bug in the Swagger-UI which prevents
+      # the correct structure to pop up when selecting.
+      # This should without the place and time layer.
+      properties:
+        place:
+          $ref: "#/components/schemas/PlacePlaceStructure"
+        time:
+          $ref: "#/components/schemas/PlaceTimeStructure"
+        # individualTransportOptions:
+        # - $ref: "#/components/schemas/IndividualTransportOptions"
+      required:
+        - place
+
+    ## CHECKED
+    # PlaceContext:
+      # NOTICE: there is a bug in the Swagger-UI which prevents
+      # the correct structure to pop up when selecting.
+      # allOf:
+        # - $ref: "#/components/schemas/PlacePlaceStructure"
+        # - $ref: "#/components/schemas/PlaceTimeStructure"
+        # individualTransportOptions:
+        # - $ref: "#/components/schemas/IndividualTransportOptions"
+
+
+
+    StopPointRefStructure:
+      type: object
+      required:
+        - stopPointRef
+      properties:
+        stopPointRef:
+          $ref: "#/components/schemas/StopPointRef"
+
+    StopPlaceRefStructure:
+      type: object
+      required:
+        - stopPlaceRef
+      properties:
+        stopPlaceRef:
+          $ref: "#/components/schemas/StopPlaceRef"
+
+    GeoPositionStructure:
+      type: object
+      required:
+        - geoPosition
+      properties:
+        geoPositionRef:
+          $ref: "#/components/schemas/LocationStructure"
+
+    TopographicPlaceRefStructure:
+      type: object
+      required:
+        - topographicPlaceRef
+      properties:
+        topographicPlaceRef:
+          $ref: "#/components/schemas/TopographicPlaceRef"
+
+    PointOfInterestRefStructure:
+      type: object
+      required:
+        - pointOfInterestRef
+      properties:
+        pointOfInterestRef:
+          $ref: "#/components/schemas/PointOfInterestRef"
+
+    AddressRefStructure:
+      type: object
+      required:
+        - addressRef
+      properties:
+        addressRef:
+          $ref: "#/components/schemas/AddressRef"
+
+    LocationNameStructure:
+      type: object
+      required:
+        - locationName
+      properties:
+        locationName:
+          type: string
+          example: Bern
+
+    PlaceRefStructure:
+      type: object
+      required:
+        - placeRef
+      properties:
+        placeRef:
+          $ref: "#/components/schemas/PlaceRef"
 
     ## CHECKED
     PlaceRef:
@@ -359,17 +464,13 @@ components:
         Reference to a geographic PLACE of any type which may be specified as the origin or destination of a trip.
       allOf:
         - oneOf:
-          - $ref: "#/components/schemas/StopPointRef"
-          - $ref: "#/components/schemas/StopPlaceRef"
-          - $ref: "#/components/schemas/LocationStructure"
-          # - $ref: "#/components/schemas/TopographicPlaceRef"  # Out of scope
-          - $ref: "#/components/schemas/PointOfInterestRef"
-          - $ref: "#/components/schemas/AddressRef"
-        - type: object
-          properties:
-            name:
-              type: string
-              example: Bern
+          - $ref: "#/components/schemas/StopPointRefStructure"
+          - $ref: "#/components/schemas/StopPlaceRefStructure"
+          - $ref: "#/components/schemas/GeoPositionStructure"
+          - $ref: "#/components/schemas/TopographicPlaceRefStructure"
+          - $ref: "#/components/schemas/PointOfInterestRefStructure"
+          - $ref: "#/components/schemas/AddressRefStructure"
+        - $ref: "#/components/schemas/LocationNameStructure"
 
     ## CHECKED
     TripVia:
@@ -383,6 +484,15 @@ components:
         dwellTime:
           type: string
           format: duration
+          example: "30S"
+
+    TripPlaceStructure:
+      type: object
+      properties:
+        tripPlace:
+          $ref: "#/components/schemas/TripPlace"
+      required:
+        - tripPlace
 
     ## CHECKED
     TripPlace:
@@ -408,21 +518,27 @@ components:
         noSingleStep:
           description: The user is not able to climb one step.
           type: boolean
+          default: false
         noStairs:
           description: The user is not able to walk up/down stairs.
           type: boolean
+          default: false
         noEscalator:
           type: boolean
           description: The user is not able to use an escalator.
+          default: false
         noElevator:
           type: boolean
           description: The user is not able to use an elevator.
+          default: false
         noRamp:
           type: boolean
           description: The user is not able to use an ramp.
+          default: false
         noSight:
           type: boolean
-          description: The user is not able to see.  
+          description: The user is not able to see.
+          default: false
 
     ## CHECKED
     TripMobilityFilter:
@@ -444,7 +560,7 @@ components:
             Deviation from average walk speed in percent. 100% percent is average speed. 
             Less than 100 % slower, Greater than 150% faster.
           type: number
-          format: int8
+          format: uint8
           default: 100
         additionalTransferTime:
           description: >-
@@ -452,6 +568,7 @@ components:
             public transport).
           type: string
           format: duration
+          example: 0S
 
     ## CHECKED
     NumberOfResultsGroup:
@@ -478,8 +595,8 @@ components:
             properties:
               numberOfResults:
                 type: number
-                format: int32
-                default: 0
+                format: uint8
+                default: 1
           - $ref: "#/components/schemas/NumberOfResultsGroup"
         - type: object
           properties:
@@ -520,11 +637,10 @@ components:
     TripParam:
       description: 
         Options to control the search behaviour and response contents.
-      anyOf:
+      allOf:
         # OOS - $ref: "#/components/schemas/TripDataFilter"
         - $ref: "#/components/schemas/BaseTripPolicyFilter"
         - $ref: "#/components/schemas/TripMobilityFilter"
-        - $ref: "#/components/schemas/NumberOfResultsGroup"
         - $ref: "#/components/schemas/BaseTripPolicy"
         - $ref: "#/components/schemas/TripPolicy"
         # OOS - $ref: "#/components/schemas/BaseTripContentFilter"
@@ -532,33 +648,54 @@ components:
         # OOS - $ref: "#/components/schemas/FareParam"
 
     ## Trip Response
-
+    ## CHECKED
     TripResponse:
       required:
         - tripResult
       type: object
       properties:
+        calcTime:
+          type: integer
+          minimum: 0
+        # TODO: Implement this if you understand what it is.
+        # tripResponseContext:
+        #  $ref: "#/components/schemas/ResponseContext"
         tripResult:
           $ref: "#/components/schemas/TripResult"
 
+    ## CHECKED
     TripResult:
       description: The trip results found by the server
+      allOf:
+        - type: object
+          properties:
+            resultId:
+              description: >-
+                Id of this trip result for referencing purposes. Unique within trip response.
+              type: string
+              format: uuid
+          required:
+            - resultId
+        - $ref: "#/components/schemas/ErrorMessage"
+        - oneOf:
+          - $ref: "#/components/schemas/Trip"
+          - $ref: "#/components/schemas/TripSummary"
+        # OOS - $ref: "#/components/schemas/TripFare" 
+
+    ## CHECKED
+    ErrorMessage:
       type: object
       properties:
-        resultId:
-          description: >-
-            Id of this trip result for referencing purposes. Unique within trip response.
+        code:
           type: string
-          format: uuid
-        trip:
-          $ref: "#/components/schemas/Trip"
-        tripSummary:
-          $ref: "#/components/schemas/TripSummary"
-        # tripFare:  # Out of Scope
-        #  $ref: "#/components/schemas/TripFare"
+        text:
+          type: string
+      required:
+        - code
 
     Trip:
       description: A complete trip from origin to destination
+      type: object
       required:
         - tripId
         - duration
@@ -566,7 +703,6 @@ components:
         - endTime
         - transfers
         - tripLegs
-      type: object
       properties:
         tripId:
           description: >-
@@ -576,7 +712,7 @@ components:
         duration:
           description: Overall duration of the trip
           type: string
-          example: to specify
+          example: "3500S"
         startTime:
           description: Departure time at origin.
           type: string
@@ -600,8 +736,11 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TripLeg"
-        operatingDays:   # Ask Stefan
-          $ref: "#/components/schemas/OperatingDays"
+        operatingDays:
+          $ref: "#/components/schemas/OperatingDayz"
+        # Out of scope
+        # situationFullRef:
+        #   $ref: "#/components/schemas/SituationFullRef"
         tripStatus:   # Ask Stefan
           $ref: "#/components/schemas/TripStatus"
  
@@ -629,7 +768,7 @@ components:
           description: Overall duration of the trip
           type: string
           format: duration
-          example: to specify
+          example: "3600S"
         startTime:
           description: Departure time at origin.
           type: string
@@ -673,10 +812,12 @@ components:
           description: Start date of period.
           type: string
           format: date
+          example: "2021-06-25"
         to:
           description: End date of period.
           type: string
           format: date
+          example: "2021-06-30"
         pattern:
           description: >-
             Bit pattern for operating days between start date and end date. The length of the pattern is equal to the number
@@ -684,6 +825,7 @@ components:
             is represented by the bit position.
           type: string
           pattern: '^[01]+$'
+          example: "101101"
       required:
         - from
         - to
@@ -693,18 +835,23 @@ components:
       type: object
       properties:
         unplanned:
+          description: Whether this trip is an additional one that has not been planned.
           type: boolean
           default: false
         canceled:
+          description: Whether this trip is cancelled and will not be run.
           type: boolean
           default: false
         deviation:
+          description: Whether this trip deviates from the planned service pattern.
           type: boolean
           default: false
         delayed:
+          description: Whether this trip is delayed.
           type: boolean
           default: false
         infeasible:
+          description: Whether this trip cannot be used, due to operational delays and impossible transfers.
           type: boolean
           default: false
         
@@ -712,9 +859,9 @@ components:
       description: trip leg
       allOf:
         - oneOf:
-            - $ref: "#/components/schemas/TimedLeg"
-            - $ref: "#/components/schemas/TransferLeg"
-            - $ref: "#/components/schemas/ContinuousLeg"
+            - $ref: "#/components/schemas/TimedLegStructure"
+            - $ref: "#/components/schemas/TransferLegStructure"
+            - $ref: "#/components/schemas/ContinuousLegStructure"
         - type: object
           properties:
             legId:
@@ -724,6 +871,14 @@ components:
             # participantRef:   # out of scope
             #   description: IT system that is participating in a communication with other participant(s)
             #   type: string
+
+    TimedLegStructure:
+      type: object
+      properties:
+        timedLeg:
+          $ref: "#/components/schemas/TimedLeg"
+      required:
+        - timedLeg
 
     TimedLeg:
       description: >-
@@ -755,6 +910,14 @@ components:
         #  items:
         #    $ref: "#/components/schemas/LegTrack"
 
+    TransferLegStructure:
+      type: object
+      properties:
+        transferLeg:
+          $ref: "#/components/schemas/TransferLeg"
+      required:
+        - transferLeg
+
     TransferLeg:
       description: >-
         A leg which links other legs of a trip where a transfer between different locations is required.
@@ -779,6 +942,15 @@ components:
           description: Overall duration or this interchange.
           type: string
           format: duration
+          example: "3600S"
+
+    ContinuousLegStructure:
+      type: object
+      properties:
+        continuousLeg:
+          $ref: "#/components/schemas/ContinuousLeg"
+      required:
+        - ContinuousLeg
 
     ContinuousLeg:
       description: >-
@@ -806,6 +978,7 @@ components:
             Duration of this leg according to user preferences like walk speed.
           type: string
           format: duration
+          example: "1800S"
 
     ContinuousService:
       description: >-
@@ -1101,22 +1274,29 @@ components:
       description: Model of a place
       allOf:
       - oneOf:
-        - $ref: "#/components/schemas/Address"
-        - $ref: "#/components/schemas/PointOfInterest"
-        - $ref: "#/components/schemas/StopPlace"
-        - $ref: "#/components/schemas/StopPoint"
-#        - $ref: "#/components/schemas/TopographicPlace"
+        - $ref: "#/components/schemas/AddressStructure"
+        - $ref: "#/components/schemas/PointOfInterestStructure"
+        - $ref: "#/components/schemas/StopPlaceStructure"
+        - $ref: "#/components/schemas/StopPointStructure"
+#        - $ref: "#/components/schemas/TopographicPlaceStructure"
+      - $ref: "#/components/schemas/GeoPositionStructure"
       - type: object
         properties:
           name:
             type: string
             example: Zürich HB
-          geoPosition:
-            $ref: "#/components/schemas/LocationStructure"
         #  attribute:   # Out of scope
         #   $ref: "#/components/schemas/GeneralAttribute"
         #  extension:   # Out of scope
         #   $ref: "#/components/schemas/Extension"
+
+    AddressStructure:
+      type: object
+      properties:
+        address:
+          $ref: "#/components/schemas/Address"
+      required:
+        - address
 
     ## CHECKED
     Address:
@@ -1130,12 +1310,14 @@ components:
           addressCode:
             description: ID of this address.
             type: string
+            example: NL:1916200000022621
           privateCode:
             description: Code of this address in private/foreign/proprietary coding schemes.
             $ref: "#/components/schemas/PrivateCode"
           addressName:
             description: Name or description of address for use in passenger information.
             type: string
+            example: Oude Trambaan 7, 2265CA Leidschendam, Nederland
           nameSuffix:
             description: House number of the address. If none is given, either a crossing street can be given, or the whole street is meant.
             type: string
@@ -1144,6 +1326,7 @@ components:
     ## TODO
     TopographicPlaceRef:
       type: string
+      example: NL:1621
 
     ## CHECKED
     AddressDetail:
@@ -1153,24 +1336,38 @@ components:
         countryName:
           description: "Country of the address."
           type: string
+          example: The Netherlands
         postCode:
           description: "Postal code of the address."
           type: string
+          example: 2265CA
         topographicPlaceName:
           description: "TopographicPlace name of the address. If set it should at least contain the city name."
           type: string
+          example: Leidschendam
         topographicPlaceRef:
           description: If at least one is set, only place objects within the given localities are allowed.If at least one is set, only place objects within the given localities are allowed.Reference to a TopographicPlace
           $ref: "#/components/schemas/TopographicPlaceRef"
         street:
           description: Street name of the address.
           type: string
+          example: Oude Trambaan
         houseNumber:
           description: House number of the address. If none is given, either a crossing street can be given, or the whole street is meant.
           type: string
+          example: 7
         crossRoad:
           description: Crossing. This can be used to be more specific without using house numbers.
           type: string
+
+
+    PointOfInterestStructure:
+      type: object
+      properties:
+        pointOfInterest:
+          $ref: "#/components/schemas/PointOfInterest"
+      required:
+        - pointOfInterest
 
     ## CHECKED
     PointOfInterest:
@@ -1186,6 +1383,7 @@ components:
         pointOfInterestName:
           description: Name or description of point of interest for use in passenger information.
           type: string
+          example: Park Rozenrust
         nameSuffix:
           description: Additional description of the point of interest that may be appended to the name if enough space is available. F.e. "Exhibition Center".
           type: string
@@ -1209,6 +1407,14 @@ components:
               description: Classification of the POI (when it is not from OSM). The codification of the classification Id may include de codification source (for example "IGN:[classificationCode]")
               type: string
 
+    OsmTagStructure:
+      type: object
+      properties:
+        osmTag:
+          $ref: "#/components/schemas/OsmTag"
+      required:
+        - osmTag
+
     ## CHECKED
     OsmTag:
       description: Structure of an Open Street Map tag.
@@ -1217,12 +1423,22 @@ components:
         tag:
           type: string
           description: Name of Open Street Map tag (amenity, leisure, tourism, bike, ...)
+          example: name
         value:
           type: string
           description: Value for Open Street Map tag (charging_station, hostel, yes, ...)
+          example: Rozenrust
       required:
         - tag
         - value
+
+    StopPlaceStructure:
+      type: object
+      properties:
+        stopPlace:
+          $ref: "#/components/schemas/StopPlace"
+      required:
+        - stopPlace
 
     ## CHECKED
     StopPlace:
@@ -1266,6 +1482,14 @@ components:
         covered:
           description: Whether this stop offers protection from weather conditions like rain, snow, storm etc.
           type: boolean
+
+    StopPointStructure:
+      type: object
+      properties:
+        stopPoint:
+          $ref: "#/components/schemas/StopPoint"
+      required:
+        - stopPoint
 
     ## CHECKED
     StopPoint:
