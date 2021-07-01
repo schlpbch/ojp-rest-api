@@ -661,7 +661,9 @@ components:
         # tripResponseContext:
         #  $ref: "#/components/schemas/ResponseContext"
         tripResult:
-          $ref: "#/components/schemas/TripResult"
+          type: array
+          items:
+            $ref: "#/components/schemas/TripResult"
 
     ## CHECKED
     TripResult:
