@@ -1169,6 +1169,7 @@ components:
           $ref: "#/components/schemas/LineProjection"
         roadName:
           type: string
+          example: "Oude Trambaan"
         duration:
           type: string
           format: duration
