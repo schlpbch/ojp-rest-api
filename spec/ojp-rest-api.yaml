@@ -1218,6 +1218,9 @@ components:
           items:
             $ref: "#/components/schemas/LegTrack"
 
+
+
+
     TransferLegStructure:
       type: object
       properties:
@@ -1237,6 +1240,58 @@ components:
           description: Time at which window ends.
           type: string
           format: date-time
+
+    PathLink:
+      type: object
+      properties:
+        transition:
+          $ref: "#/components/schemas/TransitionEnumeration"
+        accessFeatureType:
+          $ref: "#/components/schemas/AccessFeatureTypeEnumeration"
+        count:
+          type: integer
+          minimum: 1
+
+    PathGuidanceSection:
+      type: object
+      properties:
+        trackSection:
+          description: LINK PROJECTION on the infrastructure network of the TRIP LEG together with time information
+          $ref: "#/components/schemas/TrackSection"
+        turnDescription:
+          description: Textual description of a manoeuvre. This should imply the information from Manoeuvre, TurnAction, and TrackSection.RoadName.
+          type: string
+        guidanceAdvice:
+          description: various types of guidance advice given to travel.
+          $ref: "#/components/schemas/GuidanceAdviceEnumeration"
+        turnAction:
+          description: the range of alternative turns that can be described.
+          $ref: "#/components/schemas/TurnActionEnumeration"
+        directionHint:
+          description: Textual direction hint for better understanding, e.g. "follow signs to Hamburg"...)
+          type: string
+        bearing:
+          description: Absolute bearing after the described manoeuvre.
+          type: number
+          minimum: -360
+          maximum: 360
+        pathLink:
+          description: Description of the type of accessibility on this navigation section.
+          $ref: "#/components/schemas/PathLink"
+        # Out of scope
+        # situationFullRef:
+        #   $ref: "#/components/schemas/SituationFullRef"
+
+    PathGuidance:
+      type: object
+      properties:
+        pathGuidanceSections:
+          type: array
+          items:
+            $ref: "#/components/schemas/PathGuidanceSection"
+          minItems: 1
+      required:
+        - pathGuidanceSections
 
     TransferLeg:
       description: >-
@@ -1280,9 +1335,9 @@ components:
           minimum: 0
         attribute:
           $ref: "#/components/schemas/GeneralAttribute"
+        pathGuidance:
+          $ref: "#/components/schemas/PathGuidance"
         # Out of scope
-        # pathGuidance:
-        #  $ref: "#/components/schemas/PathGuidance"
         # situationFullRef:
         #   $ref: "#/components/schemas/SituationFullRef"
 
@@ -1327,9 +1382,9 @@ components:
         length:
           type: number
           minimum: 0
+        pathGuidance:
+          $ref: "#/components/schemas/PathGuidance"
         # Out of scope
-        # pathGuidance:
-        #  $ref: "#/components/schemas/PathGuidance"
         # situationFullRef:
         #   $ref: "#/components/schemas/SituationFullRef"
 
@@ -1409,6 +1464,31 @@ components:
         - CHECK_OUT
       default: WALK
 
+    TurnActionEnumeration:
+      description: the range of alternative turns that can be described
+      type: string
+      enum:
+        - SHARP_LEFT
+        - LEFT
+        - HALF_LEFT
+        - STRAIGHT_ON
+        - HALF_RIGHT
+        - RIGHT
+        - SHARP_RIGHT
+        - UTURN
+
+    GuidanceAdviceEnumeration:
+      description: various types of guidance advice given to travel
+      type: string
+      enum:
+        - ORIGIN
+        - DESTINATION
+        - CONTINUE
+        - KEEP
+        - TURN
+        - LEAVE
+        - ENTER
+
     TypeOfFareClassEnumeration:
       description: classes of travel available on a particular service which will affect the price to be paid
       type: string
@@ -1419,6 +1499,27 @@ components:
         - THIRD
         - BUSINESS
         - ECONOMY
+
+    TransitionEnumeration:
+      description: Transition types for interchanges.
+      type: string
+      enum:
+        - UP
+        - DOWN
+        - LEVEL
+        - UP_AND_DOWN
+        - DOWN_AND_UP
+
+    AccessFeatureTypeEnumeration:
+      description: Allowed values for a AccessFeature.
+      type: string
+      enum:
+        - LIFT
+        - STAIRS
+        - SERIES_OF_STAIRS
+        - ESCALATOR
+        - RAMP
+        - FOOTPATH
 
     PassengerCategoryEnumeration:
       description: classification of passengers by age or other factors that may determine the fare they will need to pay.
@@ -1720,15 +1821,15 @@ components:
         - $ref: "#/components/schemas/PointOfInterestStructure"
         - $ref: "#/components/schemas/StopPlaceStructure"
         - $ref: "#/components/schemas/StopPointStructure"
-#        - $ref: "#/components/schemas/TopographicPlaceStructure"
+        - $ref: "#/components/schemas/TopographicPlaceStructure"
       - $ref: "#/components/schemas/GeoPositionStructure"
       - type: object
         properties:
           name:
             type: string
             example: Zürich HB
-        #  attribute:   # Out of scope
-        #   $ref: "#/components/schemas/GeneralAttribute"
+          attribute:
+           $ref: "#/components/schemas/GeneralAttribute"
         #  extension:   # Out of scope
         #   $ref: "#/components/schemas/Extension"
 
